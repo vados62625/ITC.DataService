@@ -1,4 +1,5 @@
 using Confluent.Kafka;
+using ITC.DataService.Dto;
 using ITC.DataService.Extensions;
 using ITC.DataService.Interfaces;
 using ITC.DataService.Services;
@@ -21,7 +22,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddKafkaMessageBus();
 builder.Services.AddScoped<ICsvService, CsvService>();
 
-builder.Services.AddKafkaProducer<Null, IDictionary<int, IList<string>>>(p =>
+builder.Services.AddKafkaProducer<Null, PhaseDataDto>(p =>
 {
     var kafkaSection = configuration.GetSection("KafkaConfiguration");
     

@@ -1,4 +1,5 @@
 ﻿using Confluent.Kafka;
+using ITC.DataService.Dto;
 using ITC.DataService.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,10 +10,10 @@ namespace ITC.DataService.Controllers;
 public class CsvController : ControllerBase
 {
     private readonly ILogger<CsvController> _logger;
-    private readonly IKafkaMessageBus<Null, IDictionary<int, IList<string>>> _kafkaProducer;
+    private readonly IKafkaMessageBus<Null, PhaseDataDto> _kafkaProducer;
     private readonly ICsvService _csvService;
 
-    public CsvController(ILogger<CsvController> logger, IKafkaMessageBus<Null, IDictionary<int, IList<string>>> kafkaProducer, ICsvService csvService)
+    public CsvController(ILogger<CsvController> logger, IKafkaMessageBus<Null, PhaseDataDto> kafkaProducer, ICsvService csvService)
     {
         _logger = logger;
         _kafkaProducer = kafkaProducer;
@@ -38,11 +39,17 @@ public class CsvController : ControllerBase
 
             // Обработка CSV
             var data = _csvService.GetRowsData<IList<string>>(stream)
-                .Select((value, index) => new { value, index })
-                .ToDictionary(pair => pair.index, pair => pair.value);
+                // .Select((value, index) => new { value, index })
+                .Select(c => c.Select(x => float.TryParse(x, out var phaseVal) ? phaseVal : 0).ToArray())
+                .ToArray();
+
+            var dto = new PhaseDataDto()
+            {
+                Data = data
+            };
 
             // Отправка в Kafka
-            var sendResult = await _kafkaProducer.PublishAsync(default!, (Dictionary<int, IList<string>>)data);
+            var sendResult = await _kafkaProducer.PublishAsync(default!, dto);
 
             if (sendResult == null)
             {
