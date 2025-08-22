@@ -21,7 +21,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddKafkaMessageBus();
 builder.Services.AddScoped<ICsvService, CsvService>();
 
-builder.Services.AddKafkaProducer<Null, IDictionary<string, IList<string>>>(p =>
+builder.Services.AddKafkaProducer<Null, IDictionary<int, IList<string>>>(p =>
 {
     var kafkaSection = configuration.GetSection("KafkaConfiguration");
     

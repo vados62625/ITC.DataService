@@ -51,4 +51,28 @@ public class CsvService : ICsvService
         
         return columnsData;
     }
+    
+    public IEnumerable<IList<string>> GetRowsData<T>(Stream csvStream) where T : class
+    {
+        using var reader = new StreamReader(csvStream);
+        using var csv = new CsvReader(reader, new CsvConfiguration(CultureInfo.InvariantCulture) 
+        { 
+            Delimiter = ";", 
+            Encoding = Encoding.UTF8 
+        });
+    
+        var data = csv.GetRecords<object>().ToList();
+
+        return data.Select(c =>
+        {
+            dynamic dynamic = c;
+            var list = new List<string>
+            {
+                dynamic.Фаза1,
+                dynamic.Фаза2,
+                dynamic.Фаза3
+            };
+            return list;
+        });
+    }
 }

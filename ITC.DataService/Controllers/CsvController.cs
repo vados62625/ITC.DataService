@@ -1,14 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
-using System.Threading.Tasks;
-using Confluent.Kafka;
-using CsvHelper;
+﻿using Confluent.Kafka;
 using ITC.DataService.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 
 namespace ITC.DataService.Controllers;
 
@@ -17,10 +9,10 @@ namespace ITC.DataService.Controllers;
 public class CsvController : ControllerBase
 {
     private readonly ILogger<CsvController> _logger;
-    private readonly IKafkaMessageBus<Null, IDictionary<string, IList<string>>> _kafkaProducer;
+    private readonly IKafkaMessageBus<Null, IDictionary<int, IList<string>>> _kafkaProducer;
     private readonly ICsvService _csvService;
 
-    public CsvController(ILogger<CsvController> logger, IKafkaMessageBus<Null, IDictionary<string, IList<string>>> kafkaProducer, ICsvService csvService)
+    public CsvController(ILogger<CsvController> logger, IKafkaMessageBus<Null, IDictionary<int, IList<string>>> kafkaProducer, ICsvService csvService)
     {
         _logger = logger;
         _kafkaProducer = kafkaProducer;
@@ -45,10 +37,12 @@ public class CsvController : ControllerBase
             await using var stream = file.OpenReadStream();
 
             // Обработка CSV
-            var data = await _csvService.GetColumnsData(stream);
+            var data = _csvService.GetRowsData<IList<string>>(stream)
+                .Select((value, index) => new { value, index })
+                .ToDictionary(pair => pair.index, pair => pair.value);
 
             // Отправка в Kafka
-            var sendResult = await _kafkaProducer.PublishAsync(default!, data);
+            var sendResult = await _kafkaProducer.PublishAsync(default!, (Dictionary<int, IList<string>>)data);
 
             if (sendResult == null)
             {
