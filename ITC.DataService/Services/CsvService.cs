@@ -57,7 +57,7 @@ public class CsvService : ICsvService
         using var reader = new StreamReader(csvStream);
         using var csv = new CsvReader(reader, new CsvConfiguration(CultureInfo.InvariantCulture) 
         { 
-            Delimiter = ";", 
+            Delimiter = ",", 
             Encoding = Encoding.UTF8 
         });
     
