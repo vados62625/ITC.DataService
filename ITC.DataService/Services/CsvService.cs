@@ -68,9 +68,9 @@ public class CsvService : ICsvService
             dynamic dynamic = c;
             var list = new List<string>
             {
-                dynamic.Фаза1,
-                dynamic.Фаза2,
-                dynamic.Фаза3
+                dynamic.current_R,
+                dynamic.current_S,
+                dynamic.current_T
             };
             return list;
         });
