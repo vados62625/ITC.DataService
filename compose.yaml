@@ -10,6 +10,10 @@
       - "host.docker.internal:host-gateway"
     environment:
       KafkaConfiguration:BootstrapServers: kafka:29092
+      DataObserverConfiguration:CsvDirPath: '/mnt'
+      DataObserverConfiguration:Interval: 30
+    volumes:
+      - C:\Users\vados\Downloads:/mnt
   
   zookeeper:
     image: confluentinc/cp-zookeeper:7.3.0

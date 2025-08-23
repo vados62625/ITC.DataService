@@ -1,8 +1,10 @@
 using Confluent.Kafka;
+using ITC.DataService.Config;
 using ITC.DataService.Dto;
 using ITC.DataService.Extensions;
 using ITC.DataService.Interfaces;
 using ITC.DataService.Services;
+using ITC.DataService.Services.Hosted;
 using Swashbuckle.AspNetCore.SwaggerUI;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,6 +15,8 @@ IConfiguration configuration = new ConfigurationBuilder()
     .AddEnvironmentVariables()
     .Build();
 
+builder.Services.Configure<DataObserverConfig>(configuration.GetSection("DataObserverConfiguration"));
+
 builder.Services.AddControllers()
     .AddNewtonsoftJson();
 
@@ -21,6 +25,9 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddKafkaMessageBus();
 builder.Services.AddScoped<ICsvService, CsvService>();
+builder.Services.AddScoped<ICsvDataService, CsvDataService>();
+
+builder.Services.AddHostedService<DataObserverHostedService>();
 
 builder.Services.AddKafkaProducer<Null, PhaseDataDto>(p =>
 {
@@ -34,6 +41,11 @@ builder.Services.AddKafkaProducer<Null, PhaseDataDto>(p =>
         var convertedValue = GetTypedValue(property.PropertyType, configValue);
         property.SetValue(p, convertedValue);
     }
+});
+
+builder.WebHost.ConfigureKestrel(serverOptions =>
+{
+    serverOptions.Limits.MaxRequestBodySize = 300 * 1024 * 1024; // 300 MB
 });
 
 var app = builder.Build();

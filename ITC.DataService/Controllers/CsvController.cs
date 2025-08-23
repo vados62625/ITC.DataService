@@ -10,14 +10,12 @@ namespace ITC.DataService.Controllers;
 public class CsvController : ControllerBase
 {
     private readonly ILogger<CsvController> _logger;
-    private readonly IKafkaMessageBus<Null, PhaseDataDto> _kafkaProducer;
-    private readonly ICsvService _csvService;
+    private readonly ICsvDataService _csvDataService;
 
-    public CsvController(ILogger<CsvController> logger, IKafkaMessageBus<Null, PhaseDataDto> kafkaProducer, ICsvService csvService)
+    public CsvController(ILogger<CsvController> logger, ICsvDataService csvDataService)
     {
         _logger = logger;
-        _kafkaProducer = kafkaProducer;
-        _csvService = csvService;
+        _csvDataService = csvDataService;
     }
 
     [HttpPost("Upload")]
@@ -29,29 +27,14 @@ public class CsvController : ControllerBase
             {
                 return BadRequest("No file uploaded");
             }
-
             if (file.ContentType != "text/csv" && Path.GetExtension(file.FileName).ToLower() != ".csv")
             {
                 return BadRequest("Only CSV files are allowed");
             }
 
             await using var stream = file.OpenReadStream();
-
-            // Обработка CSV
-            var data = _csvService.GetRowsData<IList<string>>(stream)
-                // .Select((value, index) => new { value, index })
-                .Select(c => c.Select(x => float.TryParse(x, out var phaseVal) ? phaseVal : 0).ToArray())
-                .ToArray();
-
-            var dto = new PhaseDataDto()
-            {
-                Data = data
-            };
-
-            // Отправка в Kafka
-            var sendResult = await _kafkaProducer.PublishAsync(default!, dto);
-
-            if (sendResult == null)
+            var success = await _csvDataService.UploadCsv(stream);
+            if (!success)
             {
                 return StatusCode(500, "Failed to send data to Kafka");
             }
