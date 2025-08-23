@@ -22,23 +22,23 @@ public class CsvDataService : ICsvDataService
     {
         try
         {
-            // Обработка CSV
-            var data = _csvService.GetRowsData<IList<string>>(fileStream)
-                // .Select((value, index) => new { value, index })
-                .Select(c => c.Select(x => float.TryParse(x, out var phaseVal) ? phaseVal : 0).ToArray())
-                .ToArray();
+            const int chunkSize = 1000;
 
-            var dto = new PhaseDataDto()
+            var csvRows = _csvService.GetRowsData<IList<string>>(fileStream);
+
+            // Обработка и отправка по чанкам
+            var chunks = csvRows
+                .Select(row => row.Select(x => float.TryParse(x, out var phaseVal) ? phaseVal : 0).ToArray())
+                .Chunk(chunkSize);
+
+            foreach (var chunk in chunks)
             {
-                Data = data
-            };
-
-            // Отправка в Kafka
-            var sendResult = await _kafkaProducer.PublishAsync(default!, dto);
-
-            if (sendResult == null)
-            {
-                return false;
+                var dto = new PhaseDataDto()
+                {
+                    Data = chunk
+                };
+    
+                var sendResult = await _kafkaProducer.PublishAsync(default!, dto);
             }
 
             return true;
