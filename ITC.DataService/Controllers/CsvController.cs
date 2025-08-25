@@ -19,6 +19,7 @@ public class CsvController : ControllerBase
     }
 
     [HttpPost("Upload")]
+    [RequestFormLimits(MultipartBodyLengthLimit = long.MaxValue)]
     public async Task<IActionResult> UploadCsv(IFormFile? file)
     {
         try

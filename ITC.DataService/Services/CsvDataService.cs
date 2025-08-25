@@ -1,3 +1,4 @@
+using System.Globalization;
 using Confluent.Kafka;
 using ITC.DataService.Dto;
 using ITC.DataService.Interfaces;
@@ -28,7 +29,11 @@ public class CsvDataService : ICsvDataService
 
             // Обработка и отправка по чанкам
             var chunks = csvRows
-                .Select(row => row.Select(x => float.TryParse(x, out var phaseVal) ? phaseVal : 0).ToArray())
+                .Select(row => row.Select(x =>
+                {
+                    double.TryParse(x, NumberStyles.Float, CultureInfo.InvariantCulture, out var phaseVal);
+                    return phaseVal;
+                }).ToArray())
                 .Chunk(chunkSize);
 
             foreach (var chunk in chunks)
@@ -37,7 +42,7 @@ public class CsvDataService : ICsvDataService
                 {
                     Data = chunk
                 };
-    
+                
                 var sendResult = await _kafkaProducer.PublishAsync(default!, dto);
             }
 

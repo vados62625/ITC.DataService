@@ -102,7 +102,7 @@ public class DataObserverHostedService : IHostedService, IDisposable
                 foreach (var filePath in csvFiles)
                 {
                     // Проверяем, не обработан ли уже файл
-                    // if (!_processedFiles.Contains(filePath))
+                    if (!_processedFiles.Contains(filePath))
                     {
                         ProcessFile(filePath);
                     }

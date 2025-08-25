@@ -7,5 +7,6 @@ public class PhaseDataDto
 {
     [JsonPropertyName("data")]
     [JsonProperty("data")]
-    public float[][] Data { get; set; }
+    public double[][] Data { get; set; }
+    public string FileId { get; set; }
 }

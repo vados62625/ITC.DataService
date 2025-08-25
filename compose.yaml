@@ -1,6 +1,7 @@
 ﻿services:
   itc.dataservice:
     image: itc.dataservice
+    restart: unless-stopped
     build:
       context: .
       dockerfile: ITC.DataService/Dockerfile
@@ -18,6 +19,7 @@
   zookeeper:
     image: confluentinc/cp-zookeeper:7.3.0
     container_name: zookeeper
+    restart: unless-stopped
     ports:
       - "2181:2181"
     environment:
@@ -27,6 +29,7 @@
   kafka:
     image: confluentinc/cp-kafka:7.3.0
     container_name: kafka
+    restart: unless-stopped
     depends_on:
       - zookeeper
     ports:
@@ -37,6 +40,6 @@
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_INTERNAL:PLAINTEXT
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092,PLAINTEXT_INTERNAL://kafka:29092
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-      KAFKA_MESSAGE_MAX_BYTES: 1000000
+      KAFKA_MESSAGE_MAX_BYTES: 1000000000 # 1GB
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
