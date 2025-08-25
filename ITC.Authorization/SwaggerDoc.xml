@@ -1,0 +1,192 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>ITC.Authorization</name>
+    </assembly>
+    <members>
+        <member name="P:ITC.Authorization.CQRS.AddInvitedUserCommand.EmployeeId">
+            <summary>
+            Id пользователя
+            </summary>
+        </member>
+        <member name="P:ITC.Authorization.CQRS.AddInvitedUserCommand.FirstName">
+            <summary>
+            Имя
+            </summary>
+        </member>
+        <member name="P:ITC.Authorization.CQRS.AddInvitedUserCommand.LastName">
+            <summary>
+            Фамилия
+            </summary>
+        </member>
+        <member name="P:ITC.Authorization.CQRS.AddInvitedUserCommand.MiddleName">
+            <summary>
+            Отчество
+            </summary>
+        </member>
+        <member name="P:ITC.Authorization.CQRS.AddInvitedUserCommand.Gender">
+            <summary>
+            Пол
+            </summary>
+        </member>
+        <member name="P:ITC.Authorization.CQRS.AddInvitedUserCommand.Email">
+            <summary>
+            Email
+            </summary>
+        </member>
+        <member name="P:ITC.Authorization.CQRS.AddInvitedUserCommand.Position">
+            <summary>
+            Должность
+            </summary>
+        </member>
+        <member name="P:ITC.Authorization.CQRS.GetUsersQuery.Search">
+            <summary>
+            Username, Firstname, Lastname, email
+            </summary>
+        </member>
+        <member name="T:ITC.Authorization.Extensions.SwaggerFilters.SwaggerAddEnumDescriptions">
+            <summary>
+            https://stackoverflow.com/questions/36452468/swagger-ui-web-api-documentation-present-enums-as-strings
+            </summary>
+        </member>
+        <member name="M:ITC.Authorization.Extensions.SwaggerFilters.SwaggerGenOptionsExt.IncludeXmlFile(Swashbuckle.AspNetCore.SwaggerGen.SwaggerGenOptions,System.String,System.String,System.Boolean)">
+            <summary>
+            Добавляет файл xml документации из указанного каталога.
+            </summary>
+            <param name="self"></param>
+            <param name="folderPath">Имя файла. Расширение xml добавляется если его нет.</param>
+            <param name="fileName"></param>
+            <param name="includeControllerXmlComments">Включить xml контроллеров</param>
+            <returns></returns>
+        </member>
+        <member name="M:ITC.Authorization.Extensions.SwaggerFilters.SwaggerGenOptionsExt.IncludeXmlFile(Swashbuckle.AspNetCore.SwaggerGen.SwaggerGenOptions,System.String,System.Boolean)">
+            <summary>
+            Добавляет файл xml документации из  AppContext.BaseDirectory. 
+            </summary>
+            <param name="self"></param>
+            <param name="fileName">Имя файла. Расширение xml добавляется если его нет.</param>
+            <param name="includeControllerXmlComments">Включить xml контроллеров</param>
+            <returns></returns>
+        </member>
+        <member name="T:FG.Authorization.Migrations.Init">
+            <inheritdoc />
+        </member>
+        <member name="M:FG.Authorization.Migrations.Init.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:FG.Authorization.Migrations.Init.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:FG.Authorization.Migrations.Init.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:FG.Authorization.Migrations.InitialBrokerRegistrationRequestUserId">
+            <inheritdoc />
+        </member>
+        <member name="M:FG.Authorization.Migrations.InitialBrokerRegistrationRequestUserId.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:FG.Authorization.Migrations.InitialBrokerRegistrationRequestUserId.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:FG.Authorization.Migrations.InitialBrokerRegistrationRequestUserId.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:FG.Authorization.Migrations.addUserRolesCache">
+            <inheritdoc />
+        </member>
+        <member name="M:FG.Authorization.Migrations.addUserRolesCache.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:FG.Authorization.Migrations.addUserRolesCache.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:FG.Authorization.Migrations.addUserRolesCache.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:FG.Authorization.Migrations.AddingInvitedUsers">
+            <inheritdoc />
+        </member>
+        <member name="M:FG.Authorization.Migrations.AddingInvitedUsers.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:FG.Authorization.Migrations.AddingInvitedUsers.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:FG.Authorization.Migrations.AddingInvitedUsers.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:FG.Authorization.Migrations.addPersonIdToInvitedUser">
+            <inheritdoc />
+        </member>
+        <member name="M:FG.Authorization.Migrations.addPersonIdToInvitedUser.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:FG.Authorization.Migrations.addPersonIdToInvitedUser.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:FG.Authorization.Migrations.addPersonIdToInvitedUser.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:FG.Authorization.Migrations.ExternalAuthToken">
+            <inheritdoc />
+        </member>
+        <member name="M:FG.Authorization.Migrations.ExternalAuthToken.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:FG.Authorization.Migrations.ExternalAuthToken.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:FG.Authorization.Migrations.ExternalAuthToken.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:FG.Authorization.Migrations.Add_PasswordResetUser">
+            <inheritdoc />
+        </member>
+        <member name="M:FG.Authorization.Migrations.Add_PasswordResetUser.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:FG.Authorization.Migrations.Add_PasswordResetUser.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:FG.Authorization.Migrations.Add_PasswordResetUser.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:FG.Authorization.Migrations.InvitedUser">
+            <inheritdoc />
+        </member>
+        <member name="M:FG.Authorization.Migrations.InvitedUser.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:FG.Authorization.Migrations.InvitedUser.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:FG.Authorization.Migrations.InvitedUser.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:FG.Authorization.Migrations.InvitedUserGender">
+            <inheritdoc />
+        </member>
+        <member name="M:FG.Authorization.Migrations.InvitedUserGender.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:FG.Authorization.Migrations.InvitedUserGender.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:FG.Authorization.Migrations.InvitedUserGender.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:FG.Authorization.Migrations.InvitedUserUserId">
+            <inheritdoc />
+        </member>
+        <member name="M:FG.Authorization.Migrations.InvitedUserUserId.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:FG.Authorization.Migrations.InvitedUserUserId.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:FG.Authorization.Migrations.InvitedUserUserId.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+    </members>
+</doc>

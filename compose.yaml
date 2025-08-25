@@ -14,7 +14,18 @@
       DataObserverConfiguration:CsvDirPath: '/mnt'
       DataObserverConfiguration:Interval: 30
     volumes:
-      - C:\Users\vados\Downloads:/mnt
+      - C:\Users\vados\Downloads\Telegram Desktop\Data_Set_mains:/mnt
+  
+  itc.reportservice:
+    image: itc.reportservice
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: ITC.ReportService/Dockerfile
+    ports:
+      - "5016:8080"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
   
   zookeeper:
     image: confluentinc/cp-zookeeper:7.3.0

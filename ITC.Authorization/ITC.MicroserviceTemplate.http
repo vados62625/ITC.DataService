@@ -1,0 +1,6 @@
+@FG.MicroserviceTemplate_HostAddress = http://localhost:5048
+
+GET {{FG.MicroserviceTemplate_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

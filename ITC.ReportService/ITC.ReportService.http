@@ -1,0 +1,6 @@
+@ITC.ReportService_HostAddress = http://localhost:5027
+
+GET {{ITC.ReportService_HostAddress}}/Engines/
+Accept: application/json
+
+###
