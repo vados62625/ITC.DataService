@@ -25,6 +25,7 @@ jobs:
         run: |
           # Build Docker images
           docker buildx build --platform linux/amd64 --push -t vados62625/itc-dataservice:latest -f ITC.DataService/Dockerfile .
+          docker buildx build --platform linux/amd64 --push -t vados62625/itc-reportservice:latest -f ITC.ReportService/Dockerfile .
 
       - uses: shimataro/ssh-key-action@v2
         with:
@@ -54,6 +55,7 @@ jobs:
           chmod 600 ~/.ssh/id_rsa
           ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa -p 22 root@89.108.73.166 '
           docker pull vados62625/itc-dataservice:latest
+          docker pull vados62625/itc-reportservice:latest
           docker compose -f /home/ITC.DataService/docker-compose-server-cd.yml down || true &&
           docker compose -f /home/ITC.DataService/docker-compose-server-cd.yml up -d
           '
