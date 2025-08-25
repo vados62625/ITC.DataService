@@ -24,7 +24,7 @@ jobs:
         id: build
         run: |
           # Build Docker images
-          docker buildx build --platform linux/amd64 --push -t vados62625/itc-dataservice:latest -f itc.DataService/Dockerfile .
+          docker buildx build --platform linux/amd64 --push -t vados62625/itc-dataservice:latest -f ITC.DataService/Dockerfile .
 
       - uses: shimataro/ssh-key-action@v2
         with:
