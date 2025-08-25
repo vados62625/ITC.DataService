@@ -19,7 +19,7 @@ public class CsvDataService : ICsvDataService
         _kafkaProducer = kafkaProducer;
     }
 
-    public async Task<bool> UploadCsv(Stream fileStream)
+    public async Task<bool> UploadCsv(Stream fileStream, string fileName)
     {
         try
         {
@@ -36,7 +36,7 @@ public class CsvDataService : ICsvDataService
                 }).ToArray())
                 .Chunk(chunkSize);
             
-            var fileId = Guid.NewGuid().ToString();
+            var fileId = $"{fileName}___{Guid.NewGuid().ToString()}";
 
             foreach (var chunk in chunks)
             {

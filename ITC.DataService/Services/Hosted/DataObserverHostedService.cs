@@ -129,7 +129,7 @@ public class DataObserverHostedService : IHostedService, IDisposable
             using var scope = _serviceProvider.CreateScope();
             var csvDataService = scope.ServiceProvider.GetRequiredService<ICsvDataService>();
             using var fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read);
-            csvDataService.UploadCsv(fileStream);
+            csvDataService.UploadCsv(fileStream, Path.GetFileName(filePath));
             _logger.LogInformation("Файл {FileName} успешно обработан", Path.GetFileName(filePath));
                 
             // Добавляем файл в список обработанных

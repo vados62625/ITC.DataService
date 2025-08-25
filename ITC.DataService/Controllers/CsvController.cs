@@ -39,7 +39,7 @@ public class CsvController : ControllerBase
             }
 
             await using var stream = file.OpenReadStream();
-            var success = await _csvDataService.UploadCsv(stream);
+            var success = await _csvDataService.UploadCsv(stream, file.FileName);
             if (!success)
             {
                 return StatusCode(500, "Failed to send data to Kafka");
