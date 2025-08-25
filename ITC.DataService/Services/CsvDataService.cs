@@ -35,15 +35,18 @@ public class CsvDataService : ICsvDataService
                     return phaseVal;
                 }).ToArray())
                 .Chunk(chunkSize);
+            
+            var fileId = Guid.NewGuid().ToString();
 
             foreach (var chunk in chunks)
             {
                 var dto = new PhaseDataDto()
                 {
-                    Data = chunk
+                    Data = chunk,
+                    FileId = fileId
                 };
                 
-                var sendResult = await _kafkaProducer.PublishAsync(default!, dto);
+                await _kafkaProducer.PublishAsync(default!, dto);
             }
 
             return true;

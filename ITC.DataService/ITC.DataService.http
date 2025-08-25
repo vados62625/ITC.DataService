@@ -1,7 +1,7 @@
 @ITC.DataService_HostAddress = http://localhost:5041
 
 ### Отправить CSV файл
-POST {{ITC.DataService_HostAddress}}/api/Csv/Upload
+POST {{ITC.DataService_HostAddress}}/Csv/Upload
 Content-Type: multipart/form-data; boundary=WebAppBoundary
 
 --WebAppBoundary
