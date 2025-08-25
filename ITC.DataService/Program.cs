@@ -1,3 +1,4 @@
+using System.Reflection;
 using Confluent.Kafka;
 using ITC.DataService.Config;
 using ITC.DataService.Dto;
@@ -21,7 +22,12 @@ builder.Services.AddControllers()
     .AddNewtonsoftJson();
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c =>
+{
+    var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+    c.IncludeXmlComments(xmlPath);
+});
 
 builder.Services.AddKafkaMessageBus();
 builder.Services.AddScoped<ICsvService, CsvService>();
@@ -56,7 +62,7 @@ app.UseSwagger()
     {
         c.ConfigObject = new ConfigObject
         {
-            ShowCommonExtensions = true
+            ShowCommonExtensions = true,
         };
     });
 app.UseCors(c => c.WithOrigins()

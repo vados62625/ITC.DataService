@@ -18,6 +18,11 @@ public class CsvController : ControllerBase
         _csvDataService = csvDataService;
     }
 
+    /// <summary>
+    /// Загрузка csv-файла с показаниями трехфазного электродвигателя
+    /// </summary>
+    /// <param name="file"></param>
+    /// <returns></returns>
     [HttpPost("Upload")]
     [RequestFormLimits(MultipartBodyLengthLimit = long.MaxValue)]
     public async Task<IActionResult> UploadCsv(IFormFile? file)
