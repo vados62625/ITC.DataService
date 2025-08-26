@@ -66,6 +66,7 @@ jobs:
           docker pull vados62625/itc-reportservice:latest
           docker pull vados62625/itc-authservice:latest
           docker pull vados62625/itc-analyseservice:latest
+          docker pull vados62625/itc-frontend:latest
           docker compose -f /home/ITC.DataService/docker-compose-server-cd.yml down || true &&
           docker compose -f /home/ITC.DataService/docker-compose-server-cd.yml up -d
           '
