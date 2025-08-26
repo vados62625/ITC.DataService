@@ -6,3 +6,6 @@ riderModule.iml
 .git/
 .idea/
 /ITC.DataService.sln.DotSettings.user
+
+# Frontend
+node_modules/

@@ -1,0 +1,6 @@
+.textWithWrap {
+  overflow: hidden;
+  width: 24rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

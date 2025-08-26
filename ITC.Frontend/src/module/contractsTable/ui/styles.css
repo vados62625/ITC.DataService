@@ -1,0 +1,9 @@
+.row {
+  cursor: pointer;
+}
+
+.tableContainer {
+  width: 100%;
+  height: calc(100vh - 20rem);
+  padding-bottom: 1.4rem;
+}
