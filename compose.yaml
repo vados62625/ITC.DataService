@@ -98,7 +98,11 @@
 #    network_mode:
 #      bridge
 
-#  frontend:
-#    build: .
-#    ports:
-#      - "80:80"
+  frontend:
+    image: itc.frontend
+    restart: unless-stopped
+    build:
+      context: ITC.Frontend
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
