@@ -9,5 +9,6 @@ namespace ITC.ReportService.Database
         }
         
         public DbSet<Domain.Models.Engine> Engines { get; set; }
+        public DbSet<Domain.Models.Analysis> Analyses { get; set; }
     }
 }
