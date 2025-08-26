@@ -56,6 +56,10 @@
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
 
   frontend:
-    build: .
+    image: itc.frontend
+    restart: unless-stopped
+    build:
+      context: ITC.Frontend
+      dockerfile: Dockerfile
     ports:
       - "80:80"
