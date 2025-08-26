@@ -57,3 +57,20 @@
       dockerfile: Dockerfile
     ports:
       - "80:80"
+      
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.3.3
+    container_name: keycloak
+    restart: unless-stopped
+    command: start-dev
+    environment:
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://89.108.73.166:5432/KeyCloak
+      KC_DB_USERNAME: postgres
+      KC_DB_PASSWORD: cwliP4jFzjy17lH1_vL4
+      KC_BOOTSTRAP_ADMIN_USERNAME: admin
+      KC_BOOTSTRAP_ADMIN_PASSWORD: cwliP4jFzjy17lH1_vL4
+    ports:
+      - "8085:8080"
+    network_mode:
+      bridge
