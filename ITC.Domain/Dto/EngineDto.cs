@@ -6,6 +6,7 @@ namespace ITC.Domain.Dto;
 public class EngineDto : EntityDtoBase
 {
     public bool IsLastAnalyseHasDefect { get; set; }
+    public string Name { get; set; } = string.Empty;
     public EngineStatus Status { get; set; }
     public EngineType EngineType { get; set; }
     public List<DefectDto> Defects { get; set; } = new();
