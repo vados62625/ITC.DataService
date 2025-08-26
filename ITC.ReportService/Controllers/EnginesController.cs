@@ -22,7 +22,7 @@ public class EnginesController : ControllerBase
     /// <param name="query"></param>
     /// <returns></returns>
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<EngineDto>>> Get(GetQuery query)
+    public async Task<ActionResult<IEnumerable<EngineDto>>> Get([FromQuery]GetQuery query)
     {
         var result = await _mediator.Send(query);
         return Ok(result);

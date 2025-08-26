@@ -11,6 +11,8 @@ namespace ITC.ReportService.CQRS.Engine;
 
 public class GetQuery : PagingQueryBase, IRequest<PageableCollection<EngineDto>>
 {
+    public Guid? Id { get; set; }
+    public EngineType? EngineType { get; set; }
     public string? Name { get; set; }
     public EngineStatus? EngineStatus { get; set; }
 }

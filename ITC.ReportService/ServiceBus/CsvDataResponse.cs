@@ -56,6 +56,7 @@ public class CsvDataResponse
             {
                 Id = fileId,
                 Name = fileName,
+                EngineType = EngineType.Live
             };
             engine.EngineStatus = EngineStatus.Success;
 
