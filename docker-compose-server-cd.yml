@@ -65,11 +65,11 @@
     command: start-dev
     environment:
       KC_DB: postgres
-      KC_DB_URL: jdbc:postgresql://89.108.73.166:5432/KeyCloak
+      KC_DB_URL: jdbc:postgresql://89.108.73.166:5432/
       KC_DB_USERNAME: postgres
       KC_DB_PASSWORD: cwliP4jFzjy17lH1_vL4
       KC_BOOTSTRAP_ADMIN_USERNAME: admin
-      KC_BOOTSTRAP_ADMIN_PASSWORD: cwliP4jFzjy17lH1_vL4
+      KC_BOOTSTRAP_ADMIN_PASSWORD: admin
     ports:
       - "8085:8080"
     network_mode:
