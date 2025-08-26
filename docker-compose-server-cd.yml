@@ -28,6 +28,18 @@
       - "5017:8080"
     extra_hosts:
       - "host.docker.internal:host-gateway"
+      
+  itc.analyseservice:
+    image: vados62625/itc-analyseservice:latest
+    ports:
+      - "8000:8000"
+    environment:
+      - KAFKA_URL=89.108.73.166:9092
+      - RESPONSE_TOPIC_SUFFIX=Response
+      - TOPIC_NAME=CsvData
+      - USE_KRB=False
+      - SEGMENT_LENGTH=100
+      - MODEL_PATH=./code/artifacts/model/defect_model.pkl
   
   zookeeper:
     image: confluentinc/cp-zookeeper:7.3.0
