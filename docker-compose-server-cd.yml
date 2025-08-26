@@ -50,7 +50,7 @@
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
 
   frontend:
-    image: itc.frontend
+    image: vados62625/itc-frontend:latest
     restart: unless-stopped
     build:
       context: ITC.Frontend
