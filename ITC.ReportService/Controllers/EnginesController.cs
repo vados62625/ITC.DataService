@@ -45,7 +45,7 @@ public class EnginesController : ControllerBase
     /// </summary>
     /// <param name="command"></param>
     /// <returns></returns>
-    [HttpPost]
+    [HttpPut]
     public async Task<ActionResult<EngineDto>> Update(UpdateCommand command)
     {
         var result = await _mediator.Send(command);
@@ -57,7 +57,7 @@ public class EnginesController : ControllerBase
     /// </summary>
     /// <param name="id"></param>
     /// <returns></returns>
-    [HttpPost]
+    [HttpDelete]
     public async Task<ActionResult<EngineDto>> Delete(Guid id)
     {
         await _mediator.Send(new DeleteCommand { Id = id });

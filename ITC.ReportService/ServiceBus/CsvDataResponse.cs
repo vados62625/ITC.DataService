@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ITC.ReportService.ServiceBus;
 
-public class CsvDataResponseMq
+public class CsvDataResponse
 {
     public DefectsDto Defects { get; set; } = new DefectsDto();
     
@@ -36,7 +36,7 @@ public class CsvDataResponseMq
         public double Misalignment { get; set; }
     }
     
-    public class Handler : IServiceBusMessageHandler<CsvDataResponseMq>
+    public class Handler : IServiceBusMessageHandler<CsvDataResponse>
     {
         private readonly AppDbContext _db;
 
@@ -44,7 +44,7 @@ public class CsvDataResponseMq
         {
             _db = db;
         }
-        public async Task Handle(CsvDataResponseMq message, IDictionary<string, string> headers, DateTimeOffset timestamp,
+        public async Task Handle(CsvDataResponse message, IDictionary<string, string> headers, DateTimeOffset timestamp,
             CancellationToken cancellationToken)
         {
             var fileData = message.FileId.Split("___");

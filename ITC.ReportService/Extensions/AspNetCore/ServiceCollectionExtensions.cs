@@ -67,9 +67,9 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection AddMessageBusServices(this IServiceCollection self)
     {
         self
-            .AddServiceBusSerializer<CsvDataResponseMq, ServiceBusJsonSerializer<CsvDataResponseMq>>()
+            .AddServiceBusSerializer<CsvDataResponse, ServiceBusJsonSerializer<CsvDataResponse>>()
 
-            .AddMessageHandler<CsvDataResponseMq, AnalysisResultHandler>();
+            .AddMessageHandler<CsvDataResponse, AnalysisResultHandler>();
 
         return self;
     }

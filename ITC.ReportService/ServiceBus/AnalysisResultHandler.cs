@@ -4,7 +4,7 @@ using MediatR;
 
 namespace ITC.ReportService.ServiceBus;
 
-public class AnalysisResultHandler : IServiceBusMessageHandler<CsvDataResponseMq>
+public class AnalysisResultHandler : IServiceBusMessageHandler<CsvDataResponse>
 {
     private readonly IMediator _mediator;
 
@@ -13,7 +13,7 @@ public class AnalysisResultHandler : IServiceBusMessageHandler<CsvDataResponseMq
         _mediator = mediator;
     }
 
-    public async Task Handle(CsvDataResponseMq message, IDictionary<string, string> headers, DateTimeOffset timestamp,
+    public async Task Handle(CsvDataResponse message, IDictionary<string, string> headers, DateTimeOffset timestamp,
         CancellationToken cancellationToken)
     {
         await _mediator.Send(message, cancellationToken);
