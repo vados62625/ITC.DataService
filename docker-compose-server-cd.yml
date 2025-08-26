@@ -49,14 +49,14 @@
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
 
-  frontend:
-    image: vados62625/itc-frontend:latest
-    restart: unless-stopped
-    build:
-      context: ITC.Frontend
-      dockerfile: Dockerfile
-    ports:
-      - "80:80"
+#  frontend:
+#    image: vados62625/itc-frontend:latest
+#    restart: unless-stopped
+#    build:
+#      context: ITC.Frontend
+#      dockerfile: Dockerfile
+#    ports:
+#      - "80:80"
       
   keycloak:
     image: quay.io/keycloak/keycloak:26.3.3
