@@ -1,0 +1,70 @@
+.table {
+  height: 100%;
+}
+
+.container {
+  width: 100%;
+  height: 100%;
+}
+
+.table :global(.ant-table-container) {
+  border: 0.1rem solid var(--color-bg-border);
+}
+
+.table :global(.ant-table-bordered) :global(.ant-table-container) {
+  border: none;
+}
+
+.table :global(.ant-table-bordered) :global(.ant-table-tbody-virtual::after) {
+  border-bottom: none;
+}
+
+.table thead > tr > th:global(.ant-table-cell) {
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.table :global(div.ant-table-tbody-virtual-scrollbar-thumb) {
+  /* stylelint-disable-next-line -- Необходимо так как скрол в antd таблице стилизован инлайн стилем */
+  background: #b7cad4 !important;
+}
+
+.table :global(.ant-table-tbody-virtual-scrollbar) {
+  background: #f0f4f6;
+}
+
+.table :global(.ant-table-body) {
+  /* stylelint-disable-next-line -- Убрать постоянный показ скролов */
+  overflow: auto !important;
+}
+
+.nonVirtualTable :global(.ant-table-tbody > tr > td) {
+  vertical-align: middle;
+}
+
+.virtualTable :global(.ant-table-cell-with-append),
+.virtualTable :global(:not(th).ant-table-cell) {
+  display: flex;
+  align-items: center;
+}
+
+.virtualTable :global(.ant-table-placeholder > :not(th).ant-table-cell) {
+  display: block;
+}
+
+.table :global(.ant-tree-switcher) {
+  width: 0.4rem;
+}
+
+.table :global(.ant-tree) :global(.ant-tree-checkbox) {
+  margin-inline-end: 0.5rem;
+}
+
+.table :global(.ant-btn-sm) {
+  height: 3.2rem;
+  padding: 0 1.3rem;
+}
+
+.empty {
+  width: 2.4rem;
+}

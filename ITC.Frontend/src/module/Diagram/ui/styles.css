@@ -1,0 +1,36 @@
+.container {
+  display: flex;
+  justify-content: center;
+
+  width: 100%;
+  height: fit-content;
+
+  padding-top: 1.8rem;
+
+  overflow: auto;
+}
+
+.containerColumn {
+  display: flex;
+  flex-direction: column;
+
+  width: 80rem;
+  height: fit-content;
+
+  background-color: var(--color-bg-default);
+  border-radius: 0.8rem;
+  margin-left: var(--space-xl);
+}
+
+.graphics {
+  display: flex;
+  flex-direction: column;
+
+  width: 80rem;
+  height: fit-content;
+
+  background-color: var(--color-bg-default);
+  border-radius: 0.8rem;
+  margin-left: var(--space-xl);
+  margin-right: var(--space-xl);
+}

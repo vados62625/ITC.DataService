@@ -1,0 +1,13 @@
+.toolbar {
+  height: 4.8rem;
+}
+
+.toolbar > *:first-child {
+  align-items: end;
+}
+
+.actions {
+  display: flex;
+  gap: var(--space-m);
+  align-items: center;
+}

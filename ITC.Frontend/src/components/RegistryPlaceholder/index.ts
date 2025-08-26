@@ -1,0 +1,1 @@
+export { RegistryPlaceholder } from "./RegistryPlaceholder";

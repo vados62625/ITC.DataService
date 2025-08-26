@@ -1,0 +1,30 @@
+.container {
+  overflow: auto hidden;
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+
+  height: var(--toolbar-height-l);
+  padding: 0 var(--space-m);
+
+  border-bottom: 0.1rem solid var(--color-bg-border);
+}
+
+.item {
+  display: flex;
+  flex: 1 1 auto;
+  align-items: center;
+  height: 100%;
+}
+
+.left {
+  justify-content: flex-start;
+}
+
+.center {
+  justify-content: center;
+}
+
+.right {
+  justify-content: flex-end;
+}

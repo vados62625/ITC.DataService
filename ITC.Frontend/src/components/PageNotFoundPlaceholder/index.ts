@@ -1,0 +1,1 @@
+export { PageNotFoundPlaceholder } from "./PageNotFoundPlaceholder";

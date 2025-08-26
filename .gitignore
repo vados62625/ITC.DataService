@@ -6,7 +6,12 @@ riderModule.iml
 .git/
 .idea/
 /ITC.DataService.sln.DotSettings.user
+
+# ML
 .DS_Store
 __pycache__/
 .env
 poetry.lock
+
+# Frontend
+node_modules/
