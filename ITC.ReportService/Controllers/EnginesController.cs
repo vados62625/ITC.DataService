@@ -22,45 +22,45 @@ public class EnginesController : ControllerBase
     /// <param name="query"></param>
     /// <returns></returns>
     [HttpGet]
-    public ActionResult<IEnumerable<EngineDto>> Get(GetQuery query)
+    public async Task<ActionResult<IEnumerable<EngineDto>>> Get(GetQuery query)
     {
-        var result = _mediator.Send(query);
+        var result = await _mediator.Send(query);
         return Ok(result);
     }
-    
+
     /// <summary>
     /// Добавить двигатель
     /// </summary>
     /// <param name="command"></param>
     /// <returns></returns>
     [HttpPost]
-    public ActionResult<EngineDto> Add(AddCommand command)
+    public async Task<ActionResult<EngineDto>> Add(AddCommand command)
     {
-        var result = _mediator.Send(command);
+        var result = await _mediator.Send(command);
         return CreatedAtAction(nameof(Add), result);
     }
-    
+
     /// <summary>
     /// Изменить двигатель
     /// </summary>
     /// <param name="command"></param>
     /// <returns></returns>
     [HttpPost]
-    public ActionResult<EngineDto> Update(UpdateCommand command)
+    public async Task<ActionResult<EngineDto>> Update(UpdateCommand command)
     {
-        var result = _mediator.Send(command);
+        var result = await _mediator.Send(command);
         return Ok(result);
     }
-    
+
     /// <summary>
     /// Удалить двигатель
     /// </summary>
-    /// <param name="command"></param>
+    /// <param name="id"></param>
     /// <returns></returns>
     [HttpPost]
-    public ActionResult<EngineDto> Delete(DeleteCommand command)
+    public async Task<ActionResult<EngineDto>> Delete(Guid id)
     {
-        var result = _mediator.Send(command);
+        await _mediator.Send(new DeleteCommand { Id = id });
         return NoContent();
     }
 }

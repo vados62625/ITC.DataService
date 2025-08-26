@@ -73,7 +73,7 @@ public static class ServicesCollectionExtensions
             options.OperationFilter<ReqiuredAuthPolicyDescriptionFilter>();
 
             var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
-            var basePath = env != "Development" ? "/authorization" : "/";
+            var basePath = "/";
             options.DocumentFilter<BasePathDocumentFilter>(basePath);
         });
 

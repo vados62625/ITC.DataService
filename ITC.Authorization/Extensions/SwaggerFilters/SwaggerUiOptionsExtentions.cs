@@ -6,7 +6,7 @@ public static class SwaggerUiOptionsExtentions
 {
     public static SwaggerUIOptions SwaggerEndpointVersion(this SwaggerUIOptions self, string version)
     {
-        self.SwaggerEndpoint($"/authorization/swagger/{version}/swagger.json",
+        self.SwaggerEndpoint($"/swagger/{version}/swagger.json",
             $"API ver. {version}");
         return self;
     }

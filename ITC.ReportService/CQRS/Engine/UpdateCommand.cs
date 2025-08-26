@@ -8,6 +8,7 @@ namespace ITC.ReportService.CQRS.Engine;
 
 public class UpdateCommand : UpdateEntityCommandBase<EngineDto>
 {
+    public string? Name { get; set; }
 }
 
 public class UpdateCommandHandler : UpdateEntityHandlerBase<UpdateCommand, Domain.Models.Engine, EngineDto>

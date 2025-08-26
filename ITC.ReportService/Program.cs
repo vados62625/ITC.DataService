@@ -1,6 +1,8 @@
 using System.Reflection;
+using ITC.CQRS.Extensions;
 using ITC.ReportService.Database;
 using ITC.ReportService.Extensions.AspNetCore;
+using ITC.ServiceBus.Exceptions;
 using Microsoft.EntityFrameworkCore;
 using Swashbuckle.AspNetCore.SwaggerUI;
 using SystemClock = Microsoft.Extensions.Internal.SystemClock;
@@ -39,6 +41,14 @@ builder.Services.AddScoped<DbContext>(provider => provider.GetService<AppDbConte
 
 builder.Services.AddMemoryCache();
 builder.Services.AddCors();
+
+var serviceBusConfigSection = builder.Configuration.GetSection("ServiceBusOptions");
+
+builder.Services
+    .AddFGCqrs<AppDbContext>()
+    .AddFGServiceBusConsumer(serviceBusConfigSection)
+    .AddFGServiceBusProducer(serviceBusConfigSection)
+    .AddMessageBusServices();
 
 builder.Services.RegisterValidators();
 builder.Services.AddProblemDetails(builder.Environment.IsDevelopment());

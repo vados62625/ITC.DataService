@@ -6,6 +6,7 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <NoWarn>1591</NoWarn>
     </PropertyGroup>
 
     <ItemGroup>
@@ -28,7 +29,9 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\ITC.CQRS\ITC.CQRS.csproj" />
       <ProjectReference Include="..\ITC.Domain\ITC.Domain.csproj" />
+      <ProjectReference Include="..\ITC.ServiceBus\ITC.ServiceBus.csproj" />
     </ItemGroup>
 
 </Project>

@@ -3,12 +3,16 @@ using System.Reflection;
 using FluentValidation;
 using FluentValidation.TestHelper;
 using Hellang.Middleware.ProblemDetails;
+using ITC.Domain.Dto;
+using ITC.ReportService.ServiceBus;
+using ITC.ServiceBus;
+using ITC.ServiceBus.Exceptions;
 using ProblemDetailsFactory = Hellang.Middleware.ProblemDetails.ProblemDetailsFactory;
 using ProblemDetailsOptions = Hellang.Middleware.ProblemDetails.ProblemDetailsOptions;  
 
 namespace ITC.ReportService.Extensions.AspNetCore;
 
-public static class ServicesCollectionExtensions
+public static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddProblemDetails(this IServiceCollection self, bool isDevelopment)
     {
@@ -57,6 +61,16 @@ public static class ServicesCollectionExtensions
             .SelectMany(c => AssemblyScanner.FindValidatorsInAssembly(c))
             .ToList();
         validators.ForEach(validator => self.AddScoped(validator.InterfaceType, validator.ValidatorType));
+        return self;
+    }
+    
+    public static IServiceCollection AddMessageBusServices(this IServiceCollection self)
+    {
+        self
+            .AddServiceBusSerializer<CsvDataResponseMq, ServiceBusJsonSerializer<CsvDataResponseMq>>()
+
+            .AddMessageHandler<CsvDataResponseMq, AnalysisResultHandler>();
+
         return self;
     }
 }

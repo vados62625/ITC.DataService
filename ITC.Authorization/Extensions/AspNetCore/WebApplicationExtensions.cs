@@ -12,9 +12,7 @@ public static class WebApplicationExtensions
         webApplication
             .UseSwagger(c =>
             {
-                c.RouteTemplate = webApplication.Environment.IsDevelopment()
-                    ? "authorization/swagger/{documentName}/swagger.json"
-                    : "swagger/{documentName}/swagger.json";
+                c.RouteTemplate = "swagger/{documentName}/swagger.json";
             })
             .UseSwaggerUI(options =>
             {

@@ -9,7 +9,7 @@ namespace ITC.ReportService.CQRS.Engine;
 
 public class AddCommand : IRequest<EngineDto>
 {
-    public required string Mac { get; set; }
+    public string? Name { get; set; }
 }
 
 public class AddCommandHandler : CreateEntityHandlerBase<AddCommand, Domain.Models.Engine, EngineDto>
