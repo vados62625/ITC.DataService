@@ -42,6 +42,17 @@
     extra_hosts:
       - "host.docker.internal:host-gateway"
   
+  itc.authservice:
+    image: itc-authservice
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: ITC.Authorization/Dockerfile
+    ports:
+      - "5017:8080"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+  
   zookeeper:
     image: confluentinc/cp-zookeeper:7.3.0
     container_name: zookeeper
@@ -69,12 +80,25 @@
       KAFKA_MESSAGE_MAX_BYTES: 1000000000 # 1GB
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      
+#  keycloak:
+#    image: quay.io/keycloak/keycloak:26.3.3
+#    container_name: keycloak
+#    restart: unless-stopped
+#    command: start-dev
+#    environment:
+#      KC_DB: postgres
+#      KC_DB_URL: jdbc:postgresql://89.108.73.166:5432/
+#      KC_DB_USERNAME: postgres
+#      KC_DB_PASSWORD: cwliP4jFzjy17lH1_vL4
+#      KC_BOOTSTRAP_ADMIN_USERNAME: admin
+#      KC_BOOTSTRAP_ADMIN_PASSWORD: admin
+#    ports:
+#      - "8085:8080"
+#    network_mode:
+#      bridge
 
-  frontend:
-    image: itc.frontend
-    restart: unless-stopped
-    build:
-      context: ITC.Frontend
-      dockerfile: Dockerfile
-    ports:
-      - "80:80"
+#  frontend:
+#    build: .
+#    ports:
+#      - "80:80"

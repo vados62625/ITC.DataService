@@ -20,6 +20,14 @@
       - "5016:8080"
     extra_hosts:
       - "host.docker.internal:host-gateway"
+        
+  itc.authservice:
+    image: vados62625/itc-authservice:latest
+    restart: unless-stopped
+    ports:
+      - "5017:8080"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
   
   zookeeper:
     image: confluentinc/cp-zookeeper:7.3.0
