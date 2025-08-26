@@ -3,7 +3,7 @@ import os
 
 class Settings:
     # SEGMENT_LENGTH = 65536
-    SEGMENT_LENGTH = os.environ["SEGMENT_LENGTH"].strip()
+    SEGMENT_LENGTH = int(os.environ["SEGMENT_LENGTH"].strip())
 
     MODEL_PATH = os.environ["MODEL_PATH"].strip()
 
