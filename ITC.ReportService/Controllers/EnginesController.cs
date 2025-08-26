@@ -1,4 +1,5 @@
 using ITC.Domain.Dto;
+using ITC.ReportService.CQRS.Engine;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -21,7 +22,7 @@ public class EnginesController : ControllerBase
     /// <param name="query"></param>
     /// <returns></returns>
     [HttpGet]
-    public ActionResult<IEnumerable<EngineDto>> Get(Domain.CQRS.Engine.GetQuery query)
+    public ActionResult<IEnumerable<EngineDto>> Get(GetQuery query)
     {
         var result = _mediator.Send(query);
         return Ok(result);
@@ -33,7 +34,7 @@ public class EnginesController : ControllerBase
     /// <param name="command"></param>
     /// <returns></returns>
     [HttpPost]
-    public ActionResult<EngineDto> Add(Domain.CQRS.Engine.AddCommand command)
+    public ActionResult<EngineDto> Add(AddCommand command)
     {
         var result = _mediator.Send(command);
         return CreatedAtAction(nameof(Add), result);
@@ -45,7 +46,7 @@ public class EnginesController : ControllerBase
     /// <param name="command"></param>
     /// <returns></returns>
     [HttpPost]
-    public ActionResult<EngineDto> Update(Domain.CQRS.Engine.UpdateCommand command)
+    public ActionResult<EngineDto> Update(UpdateCommand command)
     {
         var result = _mediator.Send(command);
         return Ok(result);
@@ -57,7 +58,7 @@ public class EnginesController : ControllerBase
     /// <param name="command"></param>
     /// <returns></returns>
     [HttpPost]
-    public ActionResult<EngineDto> Delete(Domain.CQRS.Engine.DeleteCommand command)
+    public ActionResult<EngineDto> Delete(DeleteCommand command)
     {
         var result = _mediator.Send(command);
         return NoContent();

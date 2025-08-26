@@ -18,6 +18,8 @@ IConfiguration configuration = new ConfigurationBuilder()
 builder.Services.AddControllers()
     .AddNewtonsoftJson();
 
+builder.Services.AddOpenApi();
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
@@ -48,6 +50,8 @@ var app = builder.Build();
 await using var scope = app.Services.CreateAsyncScope();
 await using var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 await db.Database.MigrateAsync();
+
+app.MapOpenApi();
 
 app.UseHttpsRedirection();
 app.UseSwagger()
