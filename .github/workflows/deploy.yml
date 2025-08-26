@@ -26,7 +26,7 @@ jobs:
           # Build Docker images
           docker buildx build --platform linux/amd64 --push -t vados62625/itc-dataservice:latest -f ITC.DataService/Dockerfile .
           docker buildx build --platform linux/amd64 --push -t vados62625/itc-reportservice:latest -f ITC.ReportService/Dockerfile .
-          docker buildx build --platform linux/amd64 --push -t vados62625/itc-frontend:latest -f ITC.Frontend/Dockerfile .
+#          docker buildx build --platform linux/amd64 --push -t vados62625/itc-frontend:latest -f ITC.Frontend/Dockerfile .
 
       - uses: shimataro/ssh-key-action@v2
         with:
