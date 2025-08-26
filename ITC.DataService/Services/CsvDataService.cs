@@ -23,7 +23,7 @@ public class CsvDataService : ICsvDataService
     {
         try
         {
-            const int chunkSize = 1000;
+            const int chunkSize = 25600;
 
             var csvRows = _csvService.GetRowsData<IList<string>>(fileStream);
 

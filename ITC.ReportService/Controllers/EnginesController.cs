@@ -22,7 +22,7 @@ public class EnginesController : ControllerBase
     /// <param name="query"></param>
     /// <returns></returns>
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<EngineDto>>> Get([FromQuery]GetQuery query)
+    public async Task<ActionResult<PageableCollection<EngineDto>>> Get([FromQuery]GetQuery query)
     {
         var result = await _mediator.Send(query);
         return Ok(result);
@@ -58,7 +58,7 @@ public class EnginesController : ControllerBase
     /// <param name="id"></param>
     /// <returns></returns>
     [HttpDelete]
-    public async Task<ActionResult<EngineDto>> Delete(Guid id)
+    public async Task<ActionResult> Delete(Guid id)
     {
         await _mediator.Send(new DeleteCommand { Id = id });
         return NoContent();
