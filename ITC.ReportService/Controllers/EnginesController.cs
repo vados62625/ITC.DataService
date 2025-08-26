@@ -21,8 +21,8 @@ public class EnginesController : ControllerBase
     /// </summary>
     /// <param name="query"></param>
     /// <returns></returns>
-    [HttpGet]
-    public async Task<ActionResult<PageableCollection<EngineDto>>> Get([FromQuery]GetQuery query)
+    [HttpPost]
+    public async Task<ActionResult<PageableCollection<EngineDto>>> Get(GetQuery query)
     {
         var result = await _mediator.Send(query);
         return Ok(result);
