@@ -15,6 +15,21 @@
       DataObserverConfiguration:Interval: 30
     volumes:
       - C:\Users\vados\Downloads\Telegram Desktop\Data_Set_mains:/mnt
+
+  itc.analyseservice:
+    image: itc.analyseservice
+    build:
+      context: .
+      dockerfile: ITC.AnalyseService/Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - KAFKA_URL=89.108.73.166:9092
+      - RESPONSE_TOPIC_SUFFIX=Response
+      - TOPIC_NAME=CsvData
+      - USE_KRB=False
+      - SEGMENT_LENGTH=100
+      - MODEL_PATH=./code/artifacts/model/defect_model.pkl
   
   itc.reportservice:
     image: itc.reportservice
