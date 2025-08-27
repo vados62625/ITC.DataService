@@ -17,4 +17,5 @@ public class Analysis : EntityBase
     public double Unbalance { get; set; }
         
     public double Misalignment { get; set; }
+    public DateTime DateTime { get; set; }
 }

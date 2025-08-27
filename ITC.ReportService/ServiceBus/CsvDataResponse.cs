@@ -13,7 +13,11 @@ public class CsvDataResponse
     [JsonPropertyName("defects")]
     public Dictionary<string, double> Defects { get; set; } = new();
 
-    [JsonPropertyName("file_id")] public string FileId { get; set; } = string.Empty;
+    [JsonPropertyName("file_id")] 
+    public string FileId { get; set; } = string.Empty;
+    
+    [JsonPropertyName("datetime")] 
+    public DateTime DateTime { get; set; }
 
     public class Handler : IServiceBusMessageHandler<CsvDataResponse>
     {
@@ -59,6 +63,7 @@ public class CsvDataResponse
                 RollingElementsDefect = message.Defects.GetValueOrDefault("Дефект тел качения", 0),
                 Unbalance = message.Defects.GetValueOrDefault("Дисбаланс", 0),
                 Misalignment = message.Defects.GetValueOrDefault("Расцентровка", 0),
+                DateTime = message.DateTime,
             };
 
             _db.Set<Analysis>().Update(entity);
