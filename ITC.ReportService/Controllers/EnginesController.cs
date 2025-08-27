@@ -31,12 +31,14 @@ public class EnginesController : ControllerBase
     /// <summary>
     /// Добавить двигатель
     /// </summary>
-    /// <param name="command"></param>
+    /// <param name="name"></param>
+    /// <param name="file"></param>
     /// <returns></returns>
     [HttpPost]
-    public async Task<ActionResult<EngineDto>> Add(AddCommand command)
+    public async Task<ActionResult<EngineDto>> Add(string name, IFormFile file)
     {
-        var result = await _mediator.Send(command);
+        var wrapper = new AddCommandWrapper(new AddCommand { Name = name }, file);
+        var result = await _mediator.Send(wrapper);
         return CreatedAtAction(nameof(Add), result);
     }
 

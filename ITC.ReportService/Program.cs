@@ -2,7 +2,9 @@ using System.Reflection;
 using ITC.CQRS.Extensions;
 using ITC.ReportService.Database;
 using ITC.ReportService.Extensions.AspNetCore;
+using ITC.ReportService.Services;
 using ITC.ServiceBus.Exceptions;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.EntityFrameworkCore;
 using Swashbuckle.AspNetCore.SwaggerUI;
 using SystemClock = Microsoft.Extensions.Internal.SystemClock;
@@ -54,6 +56,21 @@ builder.Services.RegisterValidators();
 builder.Services.AddProblemDetails(builder.Environment.IsDevelopment());
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddMediatR(conf => conf.RegisterServicesFromAssemblies(AppDomain.CurrentDomain.GetAssemblies()));
+
+builder.Services.AddHttpClient<IDataServiceClient, DataServiceClient>(c =>
+{
+    c.BaseAddress = new Uri(builder.Configuration["DataServiceBaseAddress"]!);
+});
+
+builder.WebHost.ConfigureKestrel(serverOptions =>
+{
+    serverOptions.Limits.MaxRequestBodySize = 300 * 1024 * 1024; // 300 MB
+});
+builder.Services.Configure<FormOptions>(x =>
+{
+    x.ValueLengthLimit = int.MaxValue;
+    x.MultipartBodyLengthLimit = long.MaxValue; // In case of multipart
+});
 
 var app = builder.Build();
 

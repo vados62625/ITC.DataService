@@ -36,18 +36,24 @@ public class CsvDataResponse
             if (!Guid.TryParse(fileData.LastOrDefault(), out var fileId)) return;
 
             var engine = await _db.Set<Engine>()
-                .FirstOrDefaultAsync(x => x.Id == fileId, cancellationToken);
+                .FirstOrDefaultAsync(x => x.Id == fileId && x.EngineType == EngineType.FromFile, cancellationToken);
 
             if (engine == null)
             {
-                engine = new Engine
+                var engineName = Path.GetFileNameWithoutExtension(fileName);
+                engine = await _db.Set<Engine>()
+                    .FirstOrDefaultAsync(x => x.Name == engineName && x.EngineType == EngineType.Live, cancellationToken);
+                if (engine == null)
                 {
-                    Id = fileId,
-                    Name = fileName,
-                    EngineType = EngineType.Live
-                };
-                _db.Set<Engine>().Add(engine);
-                await _db.SaveChangesAsync(cancellationToken);
+                    engine = new Engine
+                    {
+                        Id = fileId,
+                        Name = fileName,
+                        EngineType = EngineType.Live
+                    };
+                    _db.Set<Engine>().Add(engine);
+                    await _db.SaveChangesAsync(cancellationToken);
+                }
             }
 
             engine.EngineStatus = EngineStatus.Success;
