@@ -21,6 +21,11 @@
     build:
       context: .
       dockerfile: ITC.AnalyseService/Dockerfile
+    command: >
+      sh -c "sleep 10 && python code/src/api/rest/app.py"
+    depends_on:
+      - kafka
+    restart: on-failure
     ports:
       - "8000:8000"
     environment:
