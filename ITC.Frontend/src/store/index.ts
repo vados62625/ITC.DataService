@@ -1,9 +1,4 @@
-export { store, useAppDispatch, useAppSelector } from "./store";
-export {
-  authSelector,
-  isUserAuthenticatedSelector,
-  authentication,
-  setCurrentUser,
-} from "./auth";
-
+export { store } from "./store";
+export { loginAndFetchUser, AuthSlice } from "./auth";
 export { RegistrySlice } from './registry'
+export { useAppDispatch, useAppSelector } from './storeHooks'

@@ -9,24 +9,20 @@ import { IconExit } from "@consta/uikit/IconExit";
 import css from "./style.css";
 import { useNavigate } from "react-router-dom";
 import { RoutePaths } from "../../types";
-import {
-  authSelector,
-  isUserAuthenticatedSelector,
-  setCurrentUser,
-  useAppDispatch,
-  useAppSelector,
-} from "../../store";
+import { AuthSlice } from "../../store";
+import { useSelector, useDispatch } from "react-redux";
 
 export const Navbar: FC<NavbarProps> = () => {
   const ref = useRef(null);
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
-  const isUserAuthenticated = useAppSelector(isUserAuthenticatedSelector);
-  const { currentUser } = useAppSelector(authSelector);
+  const isUserAuthenticated = useSelector(AuthSlice.selectors.isUserAuthenticatedSelector);
+  const { currentUser } = useSelector(AuthSlice.selectors.authSelector);
 
-  const dispatch = useAppDispatch();
+  const dispatch = useDispatch();
   const navigate = useNavigate();
+
   const onLogout = () => {
-    dispatch(setCurrentUser(null));
+    dispatch(AuthSlice.actions.replaceCurrentUser(null))
     navigate(RoutePaths.Auth);
   };
 
@@ -45,7 +41,6 @@ export const Navbar: FC<NavbarProps> = () => {
   const navigateToRegistry = () => {
     navigate(RoutePaths.Registry);
   };
-
 
   return (
     <div className="container-row justify-between align-center w-100">

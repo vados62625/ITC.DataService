@@ -2,7 +2,7 @@ export { Navbar } from "./Navbar";
 export { PrivateRoute } from "./PrivateRoute";
 export { Routers } from "./Routers";
 export { Auth } from "./Auth";
-export { ContractsTable } from './contractsTable'
+export { EnginesTable } from './EnginesTable'
 export { MainParams } from './MainParams'
-export { Diagram } from './Diagram'
+export { Analytics } from './Analytics'
 export { History } from './History'

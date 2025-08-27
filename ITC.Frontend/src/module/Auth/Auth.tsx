@@ -3,7 +3,7 @@ import { Button } from "@consta/uikit/Button";
 import { Text } from "@consta/uikit/Text";
 import { TextField } from "@consta/uikit/TextField";
 import css from "./style.css";
-import { authentication, useAppDispatch } from "../../store";
+import { loginAndFetchUser, useAppDispatch } from "../../store";
 import { useNavigate } from "react-router-dom";
 import { RoutePaths } from "../../types";
 
@@ -11,8 +11,8 @@ export const Auth: FC = () => {
   const [login, setLogin] = useState<string | null>(null);
   const [password, setPassword] = useState<string | null>(null);
 
-  const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const dispatch = useAppDispatch()
 
   const onChangeLogin = ({ value }: { value: string | null }) =>
     setLogin(value);
@@ -21,8 +21,16 @@ export const Auth: FC = () => {
     setPassword(value);
 
   const onLogin = () => {
-    dispatch(authentication(login ?? "", password ?? ""));
-    navigate(RoutePaths.Registry);
+    dispatch(loginAndFetchUser({ login: login ?? '', password: password ?? '' })).unwrap().then(isLogin => {
+      if (isLogin) {
+        navigate(RoutePaths.Registry);
+      }
+      else {
+        onChangeLogin({ value: null })
+        onChangePassword({ value: null })
+      }
+    }
+    )
   };
 
   return (
@@ -55,7 +63,7 @@ export const Auth: FC = () => {
         />
         <Button
           className="m-t-4"
-          label="Сохранить"
+          label="Войти"
           size="m"
           onClick={onLogin}
         />

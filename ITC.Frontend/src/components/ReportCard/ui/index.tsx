@@ -1,29 +1,63 @@
 import { Bar } from '@ant-design/plots';
 import React from "react";
-import { DefectName, DefectNameType } from '../../../types';
+import { useParams } from 'react-router-dom'
+import { DefectName, DefectNameType, DefectType, Engine } from '../../../types';
+import { EngineApi } from '../../../apiRTK';
+import { Loader } from '@consta/uikit/Loader';
+import { EngineDto } from 'src/api';
 
 type Card = {
   name: DefectNameType,
   value: number
 }
 
-export const ReportCard = () => {
-  const data: Card[] = [
-    { name: DefectName['CAGE'], value: 19 },
-    { name: DefectName['INNER_RING'], value: 40 },
-    { name: DefectName['MISALIGNMENT'], value: 41 },
-    { name: DefectName['OUTER_RING'], value: 50 },
-    { name: DefectName['ROLLING_ELEMENTS'], value: 90 },
-    { name: DefectName['UNBALANCE'], value: 100 },
-  ];
+const getLocalType = (typeNumber: number | undefined): DefectType => {
+    switch (typeNumber) {
+        case 0:
+            return 'OUTER_RING'
+        case 1:
+            return 'INNER_RING'
+        case 2:
+            return 'ROLLING_ELEMENTS'
+        case 3:
+            return 'CAGE'
+        case 4:
+            return 'UNBALANCE'
+        case 5:
+            return 'MISALIGNMENT'
+        default:
+            return 'OUTER_RING'
+    }
 
-  type Card = {
-    name: DefectNameType;
-    value: number;
-  }
+
+}
+
+const adapter = (engine: EngineDto | undefined): Card[] => {
+  if (!engine || (engine.defects ?? []).length === 0) return []
+
+  return (engine.defects ?? []).reduce((acc: Card[], defect) => {
+
+    if ((defect.history ?? []).length > 0) {
+      const card: Card = {
+        name: DefectName[getLocalType(defect.type)],
+        value: defect.history && defect.history?.length !== 0 ? (defect.history[0].probability ?? 0)*100 : 0
+      }
+
+      acc.push(card)
+    }
+
+    return acc
+  }, [])
+}
+
+export const ReportCard = () => {
+  const { id = '' } = useParams()
+  const { data, isLoading } = EngineApi.useGetByIdQuery(id, { skip: !id })
+
+  const cardData: Card[] = adapter(data)
 
   const config = {
-    data,
+    data: cardData,
     xField: 'name',
     yField: 'value',
     style: {
@@ -60,6 +94,11 @@ export const ReportCard = () => {
     },
     tooltip: false
   };
+
+  if (isLoading) {
+    return <Loader style={{ height: "100%", width: "100%" }} />
+  }
+
   return <Bar {...config} />;
 }
 

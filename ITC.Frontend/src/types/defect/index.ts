@@ -10,8 +10,14 @@ export const DefectName = {
 export type DefectType = keyof typeof DefectName
 export type DefectNameType = typeof DefectName[keyof typeof DefectName];
 
+export type DefectHistory = {
+    defectId: string,
+    date: Date
+    probability: number
+}
+
 export type Defect = {
-  type: DefectType;
-  name: string;
-  probability: number
+    engineId: string
+    type: DefectType
+    history: DefectHistory[]
 }

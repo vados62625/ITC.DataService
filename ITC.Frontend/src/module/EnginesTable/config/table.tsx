@@ -5,74 +5,84 @@ import { CONTEXT_ITEMS } from './contextButton'
 import { Badge, BadgePropStatus } from '@consta/uikit/Badge'
 
 import styles from './styles.css'
-import { RegistryRow } from 'src/types'
+import { RegistryRow, TableFilterType } from '../../../types'
 import { ContextButton } from '../../../components'
+import { getRuDate } from '../../../utils'
 
 type Props = {
   onContextClick: (record: RegistryRow) => void
+  mode: TableFilterType
 }
-
 export const getColumnsConfig = ({
   onContextClick,
+  mode
 }: Props): ColumnsType<RegistryRow> => [
     {
       title: 'Наименование',
       dataIndex: 'name',
-      width: 550,
-      render(value) {
-        return <div className={styles.textWithWrap}>{value}</div>
+      width: mode === 'FILE' ? '87%' : '67%',
+      render(_, record) {
+        return <div className={styles.textWithWrap}>{record.name}</div>
       },
     },
-     {
+    {
       title: 'Статус',
       dataIndex: 'status',
-      width: 100,
-      render(value) {
+      hidden: mode === 'FILE',
+      width: '10%',
+      render(_, record) {
         let lable = ''
         let status: BadgePropStatus | undefined = undefined
-        if (value === 'new') {
+        if (record.status === 'new') {
           lable = "Новый"
           status = 'normal'
         }
-        if (value === 'pending') {
+        if (record.status === 'pending') {
           lable = "В процессе"
           status = 'warning'
         }
-        if (value === 'failed') {
+        if (record.status === 'failed') {
           lable = "Ошибка"
           status = 'error'
         }
-        if (value === 'succses') {
+        if (record.status === 'succses') {
           lable = "Успешно обработан"
           status = 'success'
         }
-
 
         return <Badge size="s" label={lable} view="stroked" status={status} />;
       },
     },
     {
-      title: 'Наличие дефектов',
-      dataIndex: 'isHasDefect',
-      width: 50,
-      render(value) {
-        const text = value ? "Есть" : "Нет";
-        const status = value ? "warning" : "success";
-        return <Badge size="s" label={text} status={status} view="stroked" />;
-      },
-    },
-    {
       title: 'Дата последнего анализа',
       dataIndex: 'lastAnalazeDate',
-      width: 100,
-      render(value) {
-        return <div className={styles.textWithWrap}>{value}</div>
+      hidden: mode === 'FILE',
+      width: '10%',
+      render(_, record) {
+        const config: Intl.DateTimeFormatOptions = {
+          day: 'numeric',
+          month: 'numeric',
+          year: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit'
+        }
+        return <div className={styles.textWithWrap}>{getRuDate(record.lastAnalazeDate, config)}</div>
+      }
+    },
+    {
+      title: 'Наличие дефектов',
+      dataIndex: 'isLastAnalyseHasDefect',
+      width: '10%',
+      render(_, record) {
+        const text = record.isLastAnalyseHasDefect ? "Есть" : "Нет";
+        const status = record.isLastAnalyseHasDefect ? "warning" : "success";
+        return <Badge size="s" label={text} status={status} view="stroked" />;
       },
     },
     {
       title: '',
       dataIndex: 'actions',
-      width: 25,
+      width: '3%',
       render(_, record) {
         return (
           <ContextButton

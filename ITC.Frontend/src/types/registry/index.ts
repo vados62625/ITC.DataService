@@ -1,11 +1,17 @@
+import { EngineStatus } from "../engine"
+
 export type RegistryRow = {
   id: string,
   name: string
-  status: StatusType
-  isHasDefect: boolean
+  status: EngineStatus
+  isLastAnalyseHasDefect: boolean
   lastAnalazeDate: string
 }
 
-type StatusType = 'new' |'pending' | 'failed' | 'succses'
+export const TableFilterName = {
+  LIVE :'В реальном времени',
+  FILE : "Загруженные",
+} as const
 
-export type TableType = 'Live' | 'File'
+export type TableFilterType = keyof typeof TableFilterName
+export type TableFilterNameType = typeof TableFilterName[keyof typeof TableFilterName];

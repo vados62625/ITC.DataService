@@ -15,12 +15,14 @@ const replaceCurrentUser = (
   state.currentUser = action.payload;
 };
 
-export const authSlice = createSlice({
-  name: "authSlice",
-  initialState: initialState,
+export const AuthSlice = createSlice({
+  name: 'auth',
+  initialState,
   reducers: {
-    replaceCurrentUser,
+    replaceCurrentUser
   },
-});
-
-export const authReducer = authSlice.reducer;
+  selectors: {
+    authSelector: state => state,
+    isUserAuthenticatedSelector: state => !!state.currentUser,
+  },
+})

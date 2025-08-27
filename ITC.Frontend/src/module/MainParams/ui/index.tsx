@@ -1,35 +1,43 @@
 import React from 'react'
 import { Text } from '@consta/uikit/Text'
-import cn from 'classnames'
 
 import { TextWithLabel } from '../../../components'
 
 import styles from './styles.css'
+import { useParams } from 'react-router-dom'
+import { EngineApi } from '../../../apiRTK'
+import { Loader } from '@consta/uikit/Loader'
 
 export const MainParams = () => {
+  const { id = '' } = useParams()
+  const { data, isLoading } = EngineApi.useGetByIdQuery(id, { skip: !id })
+
+  if (isLoading) {
+    return <Loader style={{ height: "100%", width: "100%" }} />
+  }
+
   return (
     <div className={styles.container}>
       <div className={styles.containerColumn}>
         <Text size="l" weight="light">
-          Параметры коммерческого условия
+          Параметры стенда
         </Text>
         <TextWithLabel
-          label="Юридический номер"
+          label="Номер двигателя"
           weight="semibold"
-          text={'text'}
+          text={data?.name}
         />
-        <TextWithLabel label="Период действия" weight="semibold" text={"period"} />
-        <TextWithLabel label="ДО Исполнителя" weight="semibold" text={"contractorName"} />
-        <TextWithLabel label="ДО Заказчика" weight="semibold" text={"customerNames"} />
-        <div className={styles.row}>
-          <TextWithLabel label="НДС" weight="semibold" text={"mainParams.nds"} />
-          <TextWithLabel label="Стоимость c НДС" weight="semibold" text={"mainParams.costWithNds"} />
-          <TextWithLabel
-            label="Стоимость без НДС"
-            weight="semibold"
-            text={"mainParams.costWithoutNds"}
-          />
-        </div>
+        <TextWithLabel label="Тип ЭД" weight="semibold" text={"Асинхронный"} />
+        <TextWithLabel label="Номинальная мощность ЭД, кВт" weight="semibold" text={"3"} />
+        <TextWithLabel label="Подшипники" weight="semibold" text={"NSK6205DDU"} />
+
+        <TextWithLabel label="Номинальная частота вращения ЭД, об/мин" weight="semibold" text={"1770"} />
+        <TextWithLabel label="Номинальная частота вращения выходного вала мультипликатора, об/мин" weight="semibold" text={"3010"} />
+        <TextWithLabel
+          label="Частота дискретизации сигналов тока потребления ЭД, кГц"
+          weight="semibold"
+          text={"25,6"}
+        />
       </div>
     </div>
   )

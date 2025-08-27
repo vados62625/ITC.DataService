@@ -1,22 +1,24 @@
 import React, { useState } from 'react'
-import { useDispatch } from 'react-redux'
+
 import { useParams } from 'react-router-dom'
 import { Loader } from '@consta/uikit/Loader'
 import type { TabsItemDefault } from '@consta/uikit/Tabs'
-import { CONTRACT_TABS, ContractPageToolbar } from '../../components'
+import { TABS, PageToolbar } from '../../components'
 
 import styles from './styles.css'
-import { Diagram, MainParams } from '../../module'
+import { Analytics, MainParams } from '../../module'
 
 export const Details = () => {
-  const [currentTabs, setCurrentTabs] = useState<TabsItemDefault>(CONTRACT_TABS[0])
+  const [currentTabs, setCurrentTabs] = useState<TabsItemDefault>(TABS[0])
   const { id = '' } = useParams()
 
-  const dispatch = useDispatch()
-
-  const isMainParamsTab = currentTabs === CONTRACT_TABS[0]
-  const isAnalyticTab = currentTabs === CONTRACT_TABS[1]
+  const isMainParamsTab = currentTabs === TABS[0]
+  const isAnalyticTab = currentTabs === TABS[1]
   const isLoading = false
+
+  const onDownload = () => {
+    window.print()
+  }
 
   if (isLoading) {
     return <Loader className="loaderFullContent" />
@@ -24,17 +26,17 @@ export const Details = () => {
 
   return (
     <div className={styles.container}>
-      <ContractPageToolbar
+      <PageToolbar
         currentTab={currentTabs}
-        // isMainParamsTab={isMainParamsTab}
-        // isAnalyticTab={isAnalyticTab}
+        isAnalyticTab={isAnalyticTab}
         onChangeTab={({ value }) => {
           setCurrentTabs(value)
         }}
+        onDownload={onDownload}
       />
       <div className={styles.tabContent}>
         {isMainParamsTab && <MainParams />}
-        {isAnalyticTab && <Diagram />}
+        {isAnalyticTab && <Analytics />}
       </div>
     </div>
   )

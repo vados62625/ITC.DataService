@@ -1,32 +1,53 @@
-import { User } from "../../types";
-// import { loginInSystem } from "../../api";
-import { AppDispatch } from "../store";
-import { authSlice } from "./slice";
-
-/**
- * Вход пользователя в систему
- * @param login логин
- * @param password пароль
- */
-export const authentication =
-  (login: string, password: string) => async (dispatch: AppDispatch) => {
+import { createAsyncThunk } from "@reduxjs/toolkit";
+import { AuthSlice } from "./slice";
+export const loginAndFetchUser = createAsyncThunk(
+  'auth/loginAndFetch',
+  async ({ login, password }: { login: string; password: string }, { rejectWithValue, dispatch }) => {
     try {
-      // await loginInSystem(login, password).then((res) => {
-      //   console.log(res);
-      //   // authSlice.actions.replaceCurrentUser()
-      //   localStorage.setItem("token", res); // Сохранение токена в localStorage
-      // });
-    } catch (error) {
-      console.error(error);
-      alert("Ошибка аутентификации");
-    }
-  };
+      // 1. Логин в систему
+      const loginResponse = await fetch('http://89.108.73.166:5017/api/v1/Authorization/Signin', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          userId: login,
+          password: password
+        })
+      });
 
-/**
- * Устанавливает значение текущего пользователя
- * @param value значение текущего пользователя
- */
-export const setCurrentUser =
-  (value: User | null) => (dispatch: AppDispatch) => {
-    dispatch(authSlice.actions.replaceCurrentUser(value));
-  };
+      if (!loginResponse.ok) {
+        throw new Error(`Ошибка входа: ${loginResponse.status}`);
+      }
+
+      const loginData = await loginResponse.json();
+      const token = loginData.token || loginData.accessToken;
+
+      // Сохраняем токен
+      localStorage.setItem("token", token);
+
+      // 2. Получаем информацию о пользователе
+      const userResponse = await fetch('http://89.108.73.166:5017/api/v1/Users/AuthorizedContext', {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (!userResponse.ok) {
+        throw new Error(`Ошибка получения данных: ${userResponse.status}`);
+      }
+
+      const userData = await userResponse.json();
+      console.log(userData);
+      
+      dispatch(AuthSlice.actions.replaceCurrentUser({ id: userData.id, userName: userData.login }))
+
+      return true
+    } catch (error: any) {
+      console.log('Ошибка');
+      ;
+    }
+  }
+);

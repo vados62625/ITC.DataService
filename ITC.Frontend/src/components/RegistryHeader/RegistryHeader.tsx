@@ -1,27 +1,27 @@
 import React, { FC, useState } from "react";
 import { RegistryHeaderProps } from "./types";
 import { Button } from "@consta/uikit/Button";
-import { IconAdd } from "@consta/uikit/IconAdd";
+import { IconUpload } from "@consta/uikit/IconUpload";
 import { Text } from "@consta/uikit/Text";
 import { ChoiceGroup } from "@consta/uikit/ChoiceGroup";
 import { useDispatch, useSelector } from "react-redux";
 import { RegistrySlice } from "../../store";
-import { TableType } from "../../types";
+import { TableFilterName,  TableFilterType} from "../../types";
 import { Delimiter } from "../Delimiter";
 
 type ItemType = {
   name: string,
-  type: TableType
+  type: TableFilterType
 }
 
 const ITEMS: ItemType[] = [
   {
-    name: 'Лайв',
-    type: 'Live'
+    name: TableFilterName.LIVE,
+    type: 'LIVE'
   },
   {
-    name: "Загруженные",
-    type: 'File'
+    name:  TableFilterName.FILE,
+    type: 'FILE'
   }
 ]
 
@@ -32,7 +32,7 @@ export const RegistryHeader: FC<RegistryHeaderProps> = ({ onAddNewReport }) => {
   return (
     <div className="container-row justify-between align-center w-100 p-v-4">
       <Text size="2xl" weight="bold">
-        Отчеты
+        Двигатели
       </Text>
 
       <div className="">
@@ -49,9 +49,9 @@ export const RegistryHeader: FC<RegistryHeaderProps> = ({ onAddNewReport }) => {
         <Delimiter />
 
         <Button
-          label="Новый отчет"
+          label="Анализ"
           size="s"
-          iconRight={IconAdd}
+          iconRight={IconUpload}
           onClick={onAddNewReport}
         />
       </div>

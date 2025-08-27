@@ -4,15 +4,17 @@ import {
   RegistryHeader,
 } from "../../components";
 import { Modal } from "@consta/uikit/Modal";
-import { ContractsTable } from "../../module";
+import { EnginesTable } from "../../module";
 import styles from './style.css'
 import { Pagination } from "antd";
 import React from "react";
+import { EngineApi } from "../../apiRTK";
 
 export const Registry = () => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-
+  const [addEngine] = EngineApi.useAddMutation()
   const onAddNewReport = (reportName: string | null, file: File | null) => {
+    addEngine({name: reportName, file})
   };
 
   const onOpenModal = () => {
@@ -28,7 +30,7 @@ export const Registry = () => {
 
       <div className={styles.content}>
         <RegistryHeader onAddNewReport={onOpenModal} />
-        <ContractsTable />
+        <EnginesTable />
         <Pagination defaultPageSize={10} total={100} className="p-t-4"/>
 
         <Modal

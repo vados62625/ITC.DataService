@@ -1,4 +1,4 @@
-import { TableType } from "../../types"
+import { TableFilterType } from "../../types"
 
 export type InitialState = {
   modal: {
@@ -6,7 +6,7 @@ export type InitialState = {
     name: string,
     isOpen: boolean
   },
-  mode: TableType
+  mode: TableFilterType
   pagination:{
     limit: number,
     total: number,

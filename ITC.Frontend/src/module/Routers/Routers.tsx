@@ -3,11 +3,12 @@ import { Details, Registry } from "../../pages";
 import React from "react";
 import { RoutePaths } from "../../types";
 import { Auth, Navbar, PrivateRoute } from "..";
-import { isUserAuthenticatedSelector, useAppSelector } from "../../store";
 import { PageNotFoundPlaceholder } from "../../components";
+import { useSelector } from "react-redux";
+import { AuthSlice } from "../../store";
 
 export const Routers: React.FC = () => {
-  const isUserAuthenticated = useAppSelector(isUserAuthenticatedSelector);
+  const isUserAuthenticated = useSelector(AuthSlice.selectors.isUserAuthenticatedSelector);
 
   return (
     <Router>

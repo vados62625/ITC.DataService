@@ -2,7 +2,6 @@ import React, { FC, useState } from "react";
 import { AddNewReportFormProps } from "./types";
 import { Button } from "@consta/uikit/Button";
 import { IconClose } from "@consta/uikit/IconClose";
-import { IconQuestion } from "@consta/uikit/IconQuestion";
 import { IconAttach } from "@consta/uikit/IconAttach";
 import { Text } from "@consta/uikit/Text";
 import { TextField } from "@consta/uikit/TextField";
@@ -16,11 +15,11 @@ export const AddNewReportForm: FC<AddNewReportFormProps> = ({
   onAddNewReport,
   onCloseModal,
 }) => {
-  const [reportName, setReportName] = useState<string | null>(null);
+  const [engineNumber, setEngineNumber] = useState<string | null>(null);
   const [file, setFile] = React.useState<File | null>(null);
 
-  const onChangeReportName = ({ value }: { value: string | null }) =>
-    setReportName(value);
+  const onChangeEngineNumber = ({ value }: { value: string | null }) =>
+    setEngineNumber(value);
 
   const onDropFiles = (files: File[]): void => {
     setFile(files[0]);
@@ -30,13 +29,13 @@ export const AddNewReportForm: FC<AddNewReportFormProps> = ({
     setFile(null);
   };
 
-  const isSaveDisabled = !reportName || !file;
+  const isSaveDisabled = !engineNumber || !file;
 
   return (
     <div className={`container-column ${css.addNewReportFormModal} p-8`}>
       <div className="container-row justify-between p-b-8">
         <Text size="xl" weight="bold">
-          Новый отчет
+          Загрузка данных
         </Text>
         <Button
           size="s"
@@ -49,24 +48,32 @@ export const AddNewReportForm: FC<AddNewReportFormProps> = ({
       <div className="w-100 container-column">
         <TextField
           className="m-b-6"
-          onChange={onChangeReportName}
-          value={reportName}
+          onChange={onChangeEngineNumber}
+          value={engineNumber}
           type="text"
-          placeholder="Введите название отчета"
-          label="Название отчета"
-          labelIcon={IconQuestion}
+          placeholder="Введите номер двигателя"
+          label="Номер двигателя"
           required
         />
+         {/* <TextField
+          className="m-b-6"
+          onChange={onChangeEngineNumber}
+          value={engineNumber}
+          type="text"
+          placeholder="Введите номер двигателя"
+          label="Номер двигателя"
+          required
+        /> */}
         <DragNDropField
           className="m-b-6"
           onDropFiles={onDropFiles}
-          accept=".pkl"
+          accept=".csv"
         >
           {({ openFileDialog }) => (
             <>
               <Text>Перетащите файл сюда или нажмите на кнопку ниже</Text>
               <Text view="ghost" font="mono">
-                Поддерживаемые форматы: PKL
+                Поддерживаемые форматы: CSV
               </Text>
               <Button
                 className="m-t-6"
@@ -100,7 +107,7 @@ export const AddNewReportForm: FC<AddNewReportFormProps> = ({
         label="Сохранить"
         size="m"
         onClick={() => {
-          onAddNewReport(reportName, file);
+          onAddNewReport(engineNumber, file);
           onCloseModal();
         }}
         disabled={isSaveDisabled}

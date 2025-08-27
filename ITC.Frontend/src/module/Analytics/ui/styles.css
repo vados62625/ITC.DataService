@@ -3,7 +3,7 @@
   justify-content: center;
 
   width: 100%;
-  height: fit-content;
+  height: 100vh;
 
   padding-top: 1.8rem;
 
@@ -15,7 +15,7 @@
   flex-direction: column;
 
   width: 80rem;
-  height: fit-content;
+  height: 60rem;
 
   background-color: var(--color-bg-default);
   border-radius: 0.8rem;
@@ -27,7 +27,7 @@
   flex-direction: column;
 
   width: 80rem;
-  height: fit-content;
+  height: 60rem;
 
   background-color: var(--color-bg-default);
   border-radius: 0.8rem;

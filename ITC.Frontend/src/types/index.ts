@@ -1,4 +1,5 @@
 export { RoutePaths } from "./routePaths";
 export { User } from "./user";
-export { RegistryRow, TableType } from './registry'
+export { RegistryRow, TableFilterName, TableFilterNameType, TableFilterType } from './registry'
 export { Defect, DefectName, DefectType, DefectNameType } from './defect'
+export { Engine, EngineStatus } from './engine'

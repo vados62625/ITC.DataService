@@ -2,11 +2,12 @@ import React from 'react'
 import { Text } from '@consta/uikit/Text'
 
 import { ReportCard } from '../../../components'
-import { History } from '../../../module'
+import { History } from '../..'
 
 import styles from './styles.css'
 
-export const Diagram = () => {
+export const Analytics = () => {
+
   return (
     <div className={styles.container}>
       <div className={styles.containerColumn}>

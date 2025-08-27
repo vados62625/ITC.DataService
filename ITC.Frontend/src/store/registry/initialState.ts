@@ -1,7 +1,7 @@
 import type { InitialState } from './types'
 
 export const initialState: InitialState = {
-  mode: 'File',
+  mode: 'FILE',
   modal: {
     file: null,
     name: '',
