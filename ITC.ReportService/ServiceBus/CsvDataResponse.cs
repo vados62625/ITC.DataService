@@ -36,7 +36,7 @@ public class CsvDataResponse
             if (!Guid.TryParse(fileData.LastOrDefault(), out var fileId)) return;
 
             var engine = await _db.Set<Engine>()
-                .FirstOrDefaultAsync(x => x.Id == fileId && x.EngineType == EngineType.FromFile, cancellationToken);
+                .FirstOrDefaultAsync(x => x.Id == fileId, cancellationToken);
 
             if (engine == null)
             {
@@ -58,11 +58,11 @@ public class CsvDataResponse
 
             engine.EngineStatus = EngineStatus.Success;
 
-            _db.Set<Engine>().Update(engine);
+            // _db.Set<Engine>().Update(engine);
             
             var entity = new Analysis
             {
-                EngineId = fileId,
+                // EngineId = fileId,
                 CageDefect = message.Defects.GetValueOrDefault("Дефект сепаратора", 0),
                 OuterRingDefect = message.Defects.GetValueOrDefault("Дефект наружного кольца", 0),
                 InnerRingDefect = message.Defects.GetValueOrDefault("Дефект внутреннего кольца", 0),
@@ -71,8 +71,10 @@ public class CsvDataResponse
                 Misalignment = message.Defects.GetValueOrDefault("Расцентровка", 0),
                 DateTime = message.DateTime,
             };
+            
+            engine.Analyses.Add(entity);
 
-            _db.Set<Analysis>().Update(entity);
+            // _db.Set<Analysis>().Update(entity);
 
             await _db.SaveChangesAsync(cancellationToken);
         }

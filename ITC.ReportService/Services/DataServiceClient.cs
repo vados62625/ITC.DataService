@@ -6,7 +6,7 @@ namespace ITC.ReportService.Services;
 
 public interface IDataServiceClient
 {
-    Task<bool> UploadCsv(IFormFile file);
+    Task<bool> UploadCsv(IFormFile file, Guid engineId);
 }
 
 public class DataServiceClient : IDataServiceClient
@@ -20,12 +20,12 @@ public class DataServiceClient : IDataServiceClient
         _httpContextAccessor = httpContextAccessor;
     }
     
-    public async Task<bool> UploadCsv(IFormFile file)
+    public async Task<bool> UploadCsv(IFormFile file, Guid engineId)
     {
-        var uri = "/Csv/Upload";
+        var uri = $"/Csv/Upload?engineId={engineId}";
         var response = await _client.ApiPost(content =>
         {
-            content.Add(new StreamContent(file.OpenReadStream()), "file", file.Name);
+            content.Add(new StreamContent(file.OpenReadStream()), "file", file.FileName);
         }, uri);
         return response.IsSuccessStatusCode;
     }
