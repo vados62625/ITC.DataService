@@ -25,7 +25,7 @@ public class DataServiceClient : IDataServiceClient
         var uri = "/Csv/Upload";
         var response = await _client.ApiPost(content =>
         {
-            content.Add(new StreamContent(file.OpenReadStream()), "file", file.Name);
+            content.Add(new StreamContent(file.OpenReadStream()), "file", file.FileName);
         }, uri);
         return response.IsSuccessStatusCode;
     }
