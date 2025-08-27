@@ -10,5 +10,5 @@ public class EngineDto : EntityDtoBase
     public EngineStatus Status { get; set; }
     public EngineType EngineType { get; set; }
     public List<DefectDto> Defects { get; set; } = new();
-    public DateTime LastAnalyseDate { get; set; }
+    public DateTime? LastAnalyseDate { get; set; }
 }

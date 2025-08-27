@@ -104,7 +104,8 @@ public class GetQueryHandler : IRequestHandler<GetQuery, PageableCollection<Engi
                     History = unbalance
                 },
             };
-            
+            dto.IsLastAnalyseHasDefect = dto.Defects.Any(c => c.History.LastOrDefault()?.Probability > 0);
+            dto.LastAnalyseDate = dto.Defects.Max(c => c.History.LastOrDefault()?.Date);
             return dto;
         }).ToList();
 
