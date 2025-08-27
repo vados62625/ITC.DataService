@@ -7,12 +7,24 @@ import { History } from '../..'
 import styles from './styles.css'
 import { useParams } from 'react-router-dom'
 import { EngineApi } from '../../../apiRTK'
+import { Loader } from '@consta/uikit/Loader';
 
 export const Analytics = () => {
   const { id = '' } = useParams()
   const { data } = EngineApi.useGetByIdQuery(id, { skip: !id })
 
-  if (!data?.isLastAnalyseHasDefect) {
+  if (data?.status === 1) {
+    return (
+      <div className={styles.container}>
+        <div className={styles.containerColumn}>
+         <div className={styles.placeholder}>
+            <Loader />
+         </div>
+        </div>
+      </div>)
+  }
+
+  if (!data?.isLastAnalyseHasDefect && data?.status === 3) {
     return (
       <div className={styles.container}>
         <ResponsesSuccess className={styles.containerColumn} size="l" title="Дефекты не обнаружены!" actions={<></>} />

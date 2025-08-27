@@ -10,10 +10,7 @@
 
 import axios, { AxiosError } from 'axios';
 import type { AxiosInstance, AxiosRequestConfig, AxiosResponse, CancelToken } from 'axios';
-export interface FileParameter {
-    data: any;
-    fileName: string;
-}
+
 export class EnginesClient {
     protected instance: AxiosInstance;
     protected baseUrl: string;
@@ -23,7 +20,7 @@ export class EnginesClient {
 
         this.instance = instance || axios.create();
 
-        this.baseUrl = baseUrl ?? "http://89.108.73.166:5016/";
+        this.baseUrl = baseUrl ?? "http://localhost:5027/";
 
     }
 
@@ -422,7 +419,7 @@ export class EngineDto implements IEngineDto {
     status?: number;
     engineType?: number;
     defects?: DefectDto[];
-    lastAnalyseDate?: Date | undefined;
+    lastAnalyseDate?: Date;
     id?: string;
     deletedAt?: Date | undefined;
     updatedAt?: Date | undefined;
@@ -499,7 +496,7 @@ export interface IEngineDto {
     status?: number;
     engineType?: number;
     defects?: DefectDto[];
-    lastAnalyseDate?: Date | undefined;
+    lastAnalyseDate?: Date;
     id?: string;
     deletedAt?: Date | undefined;
     updatedAt?: Date | undefined;
@@ -618,6 +615,11 @@ export interface IUpdateCommand {
     id: string;
 
     [key: string]: any;
+}
+
+export interface FileParameter {
+    data: any;
+    fileName: string;
 }
 
 export class ApiException extends Error {

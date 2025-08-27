@@ -34,3 +34,12 @@
   margin-left: var(--space-xl);
   margin-right: var(--space-xl);
 }
+
+.placeholder {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  width: 100%;
+  height: 100%;
+}

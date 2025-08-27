@@ -18,12 +18,7 @@ export const loginAndFetchUser = createAsyncThunk(
       });
 
       if (!loginResponse.ok) {
-        dispatch(
-          addNotification({
-            status: 'alert',
-            message: 'Возникла ошибка при входе в систему',
-          })
-        )
+       throw new Error()
       }
 
       const loginData = await loginResponse.json();
@@ -42,12 +37,7 @@ export const loginAndFetchUser = createAsyncThunk(
       });
 
       if (!userResponse.ok) {
-        dispatch(
-          addNotification({
-            status: 'alert',
-            message: 'Ошибка получения данных пользователя',
-          })
-        )
+       throw new Error()
       }
 
       const userData = await userResponse.json();
