@@ -1,24 +1,35 @@
 import React from 'react'
 import { Text } from '@consta/uikit/Text'
-
+import { ResponsesSuccess } from '@consta/uikit/ResponsesSuccess';
 import { ReportCard } from '../../../components'
 import { History } from '../..'
 
 import styles from './styles.css'
+import { useParams } from 'react-router-dom'
+import { EngineApi } from '../../../apiRTK'
 
 export const Analytics = () => {
+  const { id = '' } = useParams()
+  const { data } = EngineApi.useGetByIdQuery(id, { skip: !id })
+
+  if (!data?.isLastAnalyseHasDefect) {
+    return (
+      <div className={styles.container}>
+        <ResponsesSuccess className={styles.containerColumn} size="l" title="Дефекты не обнаружены!" actions={<></>} />
+      </div>)
+  }
 
   return (
     <div className={styles.container}>
       <div className={styles.containerColumn}>
         <Text size="l" weight='semibold' className='m-4'>
-          Диаграмма развития вероятности дефектов
+          Диаграмма развития степени дефектов
         </Text>
         <ReportCard />
       </div>
       <div className={styles.graphics}>
         <Text size="l" weight='semibold' className='m-4'>
-          График развития вероятности дефекта 1
+          График развития степени дефекта
         </Text>
         <History />
       </div>

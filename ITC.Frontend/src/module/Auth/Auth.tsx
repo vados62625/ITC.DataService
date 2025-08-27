@@ -2,7 +2,7 @@ import React, { FC, useState } from "react";
 import { Button } from "@consta/uikit/Button";
 import { Text } from "@consta/uikit/Text";
 import { TextField } from "@consta/uikit/TextField";
-import css from "./style.css";
+import styles from "./style.css";
 import { loginAndFetchUser, useAppDispatch } from "../../store";
 import { useNavigate } from "react-router-dom";
 import { RoutePaths } from "../../types";
@@ -34,8 +34,8 @@ export const Auth: FC = () => {
   };
 
   return (
-    <div className="container-column align-center justify-center w-100 h-100">
-      <div className={css.loginForm}>
+    <div className={styles.container}>
+      <div className={styles.loginForm}>
         <Text size="xl" weight="bold" className="m-b-6">
           Войти в систему
         </Text>

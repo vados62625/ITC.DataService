@@ -1,4 +1,4 @@
-import { Bar } from '@ant-design/plots';
+import { Bar, BarConfig } from '@ant-design/plots';
 import React from "react";
 import { useParams } from 'react-router-dom'
 import { DefectName, DefectNameType, DefectType, Engine } from '../../../types';
@@ -8,26 +8,26 @@ import { EngineDto } from 'src/api';
 
 type Card = {
   name: DefectNameType,
-  value: number
+  probability: string
 }
 
 const getLocalType = (typeNumber: number | undefined): DefectType => {
-    switch (typeNumber) {
-        case 0:
-            return 'OUTER_RING'
-        case 1:
-            return 'INNER_RING'
-        case 2:
-            return 'ROLLING_ELEMENTS'
-        case 3:
-            return 'CAGE'
-        case 4:
-            return 'UNBALANCE'
-        case 5:
-            return 'MISALIGNMENT'
-        default:
-            return 'OUTER_RING'
-    }
+  switch (typeNumber) {
+    case 0:
+      return 'OUTER_RING'
+    case 1:
+      return 'INNER_RING'
+    case 2:
+      return 'ROLLING_ELEMENTS'
+    case 3:
+      return 'CAGE'
+    case 4:
+      return 'UNBALANCE'
+    case 5:
+      return 'MISALIGNMENT'
+    default:
+      return 'OUTER_RING'
+  }
 
 
 }
@@ -38,9 +38,11 @@ const adapter = (engine: EngineDto | undefined): Card[] => {
   return (engine.defects ?? []).reduce((acc: Card[], defect) => {
 
     if ((defect.history ?? []).length > 0) {
+      const lastItem = defect.history?.at(-1)
+
       const card: Card = {
         name: DefectName[getLocalType(defect.type)],
-        value: defect.history && defect.history?.length !== 0 ? (defect.history[0].probability ?? 0)*100 : 0
+        probability: lastItem?.probability ? (lastItem.probability * 100).toFixed(3) : '0'
       }
 
       acc.push(card)
@@ -56,17 +58,19 @@ export const ReportCard = () => {
 
   const cardData: Card[] = adapter(data)
 
-  const config = {
+  const config: BarConfig = {
     data: cardData,
     xField: 'name',
-    yField: 'value',
+    yField: 'probability',
     style: {
       maxWidth: 25,
       fill: (item: Card) => {
-        if (item.value > 50) {
+        const probability = Number(item.probability.split('.')[0])
+
+        if (probability > 50) {
           return 'rgba(235, 87, 87, 1)';
         }
-        if (item.value > 25) {
+        if (probability > 25) {
           return 'rgba(243, 139, 0, 1)';
         }
         return 'rgba(86, 185, 242, 1)';

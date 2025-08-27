@@ -1,5 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { AuthSlice } from "./slice";
+import { addNotification } from "../notification";
 export const loginAndFetchUser = createAsyncThunk(
   'auth/loginAndFetch',
   async ({ login, password }: { login: string; password: string }, { rejectWithValue, dispatch }) => {
@@ -17,7 +18,12 @@ export const loginAndFetchUser = createAsyncThunk(
       });
 
       if (!loginResponse.ok) {
-        throw new Error(`Ошибка входа: ${loginResponse.status}`);
+        dispatch(
+          addNotification({
+            status: 'alert',
+            message: 'Возникла ошибка при входе в систему',
+          })
+        )
       }
 
       const loginData = await loginResponse.json();
@@ -36,18 +42,25 @@ export const loginAndFetchUser = createAsyncThunk(
       });
 
       if (!userResponse.ok) {
-        throw new Error(`Ошибка получения данных: ${userResponse.status}`);
+        dispatch(
+          addNotification({
+            status: 'alert',
+            message: 'Ошибка получения данных пользователя',
+          })
+        )
       }
 
       const userData = await userResponse.json();
-      console.log(userData);
-      
-      dispatch(AuthSlice.actions.replaceCurrentUser({ id: userData.id, userName: userData.login }))
+      dispatch(AuthSlice.actions.replaceCurrentUser({ id: userData.id, userName: userData.name }))
 
       return true
     } catch (error: any) {
-      console.log('Ошибка');
-      ;
+      dispatch(
+        addNotification({
+          status: 'alert',
+          message: 'Возникла ошибка при входе в систему',
+        })
+      )
     }
   }
 );

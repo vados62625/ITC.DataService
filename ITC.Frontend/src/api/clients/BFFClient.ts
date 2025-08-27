@@ -10,7 +10,10 @@
 
 import axios, { AxiosError } from 'axios';
 import type { AxiosInstance, AxiosRequestConfig, AxiosResponse, CancelToken } from 'axios';
-
+export interface FileParameter {
+    data: any;
+    fileName: string;
+}
 export class EnginesClient {
     protected instance: AxiosInstance;
     protected baseUrl: string;
@@ -106,20 +109,29 @@ export class EnginesClient {
     }
 
     /**
+     * @param name (optional) 
+     * @param file (optional) 
      * @return OK
      */
-    enginesPost(body: AddCommand, signal?: AbortSignal): Promise<EngineDto> {
-        let url_ = this.baseUrl + "/Engines";
+    enginesPost(name: string | undefined, file: FileParameter | undefined, signal?: AbortSignal): Promise<EngineDto> {
+        let url_ = this.baseUrl + "/Engines?";
+        if (name === null)
+            throw new Error("The parameter 'name' cannot be null.");
+        else if (name !== undefined)
+            url_ += "name=" + encodeURIComponent("" + name) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
-        const content_ = JSON.stringify(body);
+        const content_ = new FormData();
+        if (file === null || file === undefined)
+            throw new Error("The parameter 'file' cannot be null.");
+        else
+            content_.append("file", file.data, file.fileName ? file.fileName : "file");
 
         let options_: AxiosRequestConfig = {
             data: content_,
             method: "POST",
             url: url_,
             headers: {
-                "Content-Type": "application/json-patch+json",
                 "Accept": "text/plain"
             },
             signal
@@ -268,54 +280,6 @@ export class EnginesClient {
     }
 }
 
-export class AddCommand implements IAddCommand {
-    name?: string | undefined;
-
-    [key: string]: any;
-
-    constructor(data?: IAddCommand) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            for (var property in _data) {
-                if (_data.hasOwnProperty(property))
-                    this[property] = _data[property];
-            }
-            this.name = _data["name"];
-        }
-    }
-
-    static fromJS(data: any): AddCommand {
-        data = typeof data === 'object' ? data : {};
-        let result = new AddCommand();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        for (var property in this) {
-            if (this.hasOwnProperty(property))
-                data[property] = this[property];
-        }
-        data["name"] = this.name;
-        return data;
-    }
-}
-
-export interface IAddCommand {
-    name?: string | undefined;
-
-    [key: string]: any;
-}
-
 export class DefectDto implements IDefectDto {
     engineId?: string;
     type?: number;
@@ -458,7 +422,7 @@ export class EngineDto implements IEngineDto {
     status?: number;
     engineType?: number;
     defects?: DefectDto[];
-    lastAnalyseDate?: Date;
+    lastAnalyseDate?: Date | undefined;
     id?: string;
     deletedAt?: Date | undefined;
     updatedAt?: Date | undefined;
@@ -535,7 +499,7 @@ export interface IEngineDto {
     status?: number;
     engineType?: number;
     defects?: DefectDto[];
-    lastAnalyseDate?: Date;
+    lastAnalyseDate?: Date | undefined;
     id?: string;
     deletedAt?: Date | undefined;
     updatedAt?: Date | undefined;

@@ -7,14 +7,15 @@ import { TABS, PageToolbar } from '../../components'
 
 import styles from './styles.css'
 import { Analytics, MainParams } from '../../module'
+import { EngineApi } from '../../apiRTK'
 
 export const Details = () => {
   const [currentTabs, setCurrentTabs] = useState<TabsItemDefault>(TABS[0])
   const { id = '' } = useParams()
+  const { data, isLoading } = EngineApi.useGetByIdQuery(id, { skip: !id })
 
   const isMainParamsTab = currentTabs === TABS[0]
   const isAnalyticTab = currentTabs === TABS[1]
-  const isLoading = false
 
   const onDownload = () => {
     window.print()
@@ -29,6 +30,7 @@ export const Details = () => {
       <PageToolbar
         currentTab={currentTabs}
         isAnalyticTab={isAnalyticTab}
+        isDownloadButtonVisible={!!data?.isLastAnalyseHasDefect}
         onChangeTab={({ value }) => {
           setCurrentTabs(value)
         }}

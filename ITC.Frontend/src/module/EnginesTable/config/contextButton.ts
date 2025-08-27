@@ -13,11 +13,6 @@ export type ContextItemType = ContextMenuItemDefault & {
 
 export const CONTEXT_ITEMS: ContextItemType[] = [
   {
-    leftIcon: IconDownload,
-    label: 'Скачать',
-    key: CONTEXT_ACTION.report,
-  },
-  {
     label: 'Удалить',
     leftIcon: IconTrash,
     key: CONTEXT_ACTION.remove,

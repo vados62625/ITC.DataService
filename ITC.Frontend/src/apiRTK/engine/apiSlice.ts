@@ -1,6 +1,7 @@
 import { RegistryRow, TableFilterType } from 'src/types'
-import { AddCommand, apiSlice, Clients, EngineDto } from '../../api'
+import { apiSlice, Clients, EngineDto } from '../../api'
 import { FetchBaseQueryError } from '@reduxjs/toolkit/query'
+import { addNotification } from '../../store/notification'
 
 const getLocalStatus = (statusNumber: number | undefined) => {
     switch (statusNumber) {
@@ -28,11 +29,18 @@ const adapter = (engine: EngineDto): RegistryRow => ({
 export const EngineApi = apiSlice.injectEndpoints({
     endpoints: build => ({
         getAllByFilter: build.query<RegistryRow[], TableFilterType>({
-            queryFn: async filter => {
+            queryFn: async (filter, { dispatch }) => {
+                const getFilter = (): '0' | "1" => {
+                    if (filter === 'LIVE') {
+                        return '0'
+                    }
+                    return '1'
+                }
+
                 try {
                     //   const data = await Clients.EnginesClient.enginesGet(filter)
                     // id, engineType, name, engineStatus, page, itemsCount
-                    const data = await Clients.EnginesClient.enginesGet(undefined, '0', undefined, undefined, 1, 1)
+                    const data = await Clients.EnginesClient.enginesGet(undefined, getFilter(), undefined, undefined, 1, 1)
                     // const data: RegistryRow[] = [
                     //     {
                     //         id: '1',
@@ -275,6 +283,13 @@ export const EngineApi = apiSlice.injectEndpoints({
                         status: 'CUSTOM_ERROR',
                         error: error instanceof Error ? error.message : 'Unknown error'
                     };
+                    dispatch(
+                        addNotification({
+                            status: 'alert',
+                            message: 'Ошибка загрузки данных реестра двигателей',
+                        })
+                    )
+
                     return {
                         error: fetchError,
                         // meta: {
@@ -283,10 +298,11 @@ export const EngineApi = apiSlice.injectEndpoints({
                     }
                 }
             },
+            providesTags: ['Engine'],
         }),
 
         getById: build.query<EngineDto | undefined, string>({
-            queryFn: async id => {
+            queryFn: async (id, { dispatch }) => {
                 try {
                     // id, engineType, name, engineStatus, page, itemsCount
                     const data = await Clients.EnginesClient.enginesGet(id, undefined, undefined, undefined, 1, 1)
@@ -314,6 +330,13 @@ export const EngineApi = apiSlice.injectEndpoints({
                         status: 'CUSTOM_ERROR',
                         error: error instanceof Error ? error.message : 'Unknown error'
                     };
+                    dispatch(
+                        addNotification({
+                            status: 'alert',
+                            message: 'Ошибка загрузки данных двигателя',
+                        })
+                    )
+
                     return {
                         error: fetchError,
                         // meta: {
@@ -322,14 +345,28 @@ export const EngineApi = apiSlice.injectEndpoints({
                     }
                 }
             },
+            providesTags: ['Engine'],
         }),
 
         add: build.mutation<EngineDto, { name: string | null, file: File | null }>({
-            queryFn: async ({ file, name }) => {
+            queryFn: async ({ file, name }, { dispatch }) => {
+
+                const fileToUpload = {
+                    fileName: file?.name ?? 'fileName.csv',
+                    data: file,
+                }
+
                 try {
-                    const data = await Clients.EnginesClient.enginesPost(new AddCommand({
-                        name: name ?? "",
-                    }))
+                    const data = await Clients.EnginesClient.enginesPost(name ?? "", fileToUpload)
+                    dispatch(
+                        addNotification({
+                            status: 'success',
+                            message: `Данные двигателя ${name} успешно загружены`,
+                        })
+                    )
+
+                    console.log('data', data);
+
                     return {
                         data,
                     }
@@ -338,17 +375,33 @@ export const EngineApi = apiSlice.injectEndpoints({
                         status: 'CUSTOM_ERROR',
                         error: error instanceof Error ? error.message : 'Unknown error'
                     };
+                    dispatch(
+                        addNotification({
+                            status: 'alert',
+                            message: `Ошибка при добавлении данных двигателя`,
+                        })
+                    )
+
+                    console.log('fetchError', fetchError);
+
                     return {
                         error: fetchError,
                     }
                 }
             },
+            invalidatesTags: ['Engine'],
         }),
 
         delete: build.mutation<void, string>({
-            queryFn: async id => {
+            queryFn: async (id, { dispatch }) => {
                 try {
                     const data = await Clients.EnginesClient.enginesDelete(id)
+                    dispatch(
+                        addNotification({
+                            status: 'success',
+                            message: `Данные двигателя успешно удалены`,
+                        })
+                    )
                     return {
                         data,
                     }
@@ -357,11 +410,18 @@ export const EngineApi = apiSlice.injectEndpoints({
                         status: 'CUSTOM_ERROR',
                         error: error instanceof Error ? error.message : 'Unknown error'
                     };
+                    dispatch(
+                        addNotification({
+                            status: 'alert',
+                            message: `Ошибка при удалении данных двигателя`,
+                        })
+                    )
                     return {
                         error: fetchError,
                     }
                 }
             },
+            invalidatesTags: ['Engine'],
         }),
     }),
 })

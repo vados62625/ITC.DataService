@@ -12,15 +12,17 @@ import { Button } from '@consta/uikit/Button'
 type Props = {
   currentTab: TabsItemDefault
   onChangeTab: TabsProps['onChange']
-  onDownload: () => void,
+  onDownload: () => void
   isAnalyticTab: boolean
+  isDownloadButtonVisible: boolean
 }
 
 export const PageToolbar = ({
   currentTab,
   onChangeTab,
   onDownload,
-  isAnalyticTab
+  isAnalyticTab,
+  isDownloadButtonVisible
 }: Props) => {
 
   return (
@@ -37,7 +39,7 @@ export const PageToolbar = ({
         />
       }
       right={
-        isAnalyticTab && <Button
+        isAnalyticTab && isDownloadButtonVisible && <Button
           label="Скачать"
           size="s"
           iconRight={IconDownload}

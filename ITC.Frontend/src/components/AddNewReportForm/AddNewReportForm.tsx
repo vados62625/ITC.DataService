@@ -8,7 +8,7 @@ import { TextField } from "@consta/uikit/TextField";
 import { DragNDropField } from "@consta/uikit/DragNDropField";
 import { Attachment } from "@consta/uikit/Attachment";
 
-import css from "./style.css";
+import styles from "./style.css";
 import { humanFileSize } from "../../utils";
 
 export const AddNewReportForm: FC<AddNewReportFormProps> = ({
@@ -32,8 +32,8 @@ export const AddNewReportForm: FC<AddNewReportFormProps> = ({
   const isSaveDisabled = !engineNumber || !file;
 
   return (
-    <div className={`container-column ${css.addNewReportFormModal} p-8`}>
-      <div className="container-row justify-between p-b-8">
+    <div className={`container-column ${styles.addNewReportFormModal} p-6`}>
+      <div className="container-row justify-between">
         <Text size="xl" weight="bold">
           Загрузка данных
         </Text>
@@ -45,7 +45,7 @@ export const AddNewReportForm: FC<AddNewReportFormProps> = ({
           onClick={onCloseModal}
         />
       </div>
-      <div className="w-100 container-column">
+      <div className="w-100 container-column p-t-4">
         <TextField
           className="m-b-6"
           onChange={onChangeEngineNumber}
@@ -55,17 +55,8 @@ export const AddNewReportForm: FC<AddNewReportFormProps> = ({
           label="Номер двигателя"
           required
         />
-         {/* <TextField
-          className="m-b-6"
-          onChange={onChangeEngineNumber}
-          value={engineNumber}
-          type="text"
-          placeholder="Введите номер двигателя"
-          label="Номер двигателя"
-          required
-        /> */}
         <DragNDropField
-          className="m-b-6"
+          className="m-b-2"
           onDropFiles={onDropFiles}
           accept=".csv"
         >
@@ -76,7 +67,7 @@ export const AddNewReportForm: FC<AddNewReportFormProps> = ({
                 Поддерживаемые форматы: CSV
               </Text>
               <Button
-                className="m-t-6"
+                className="m-t-2"
                 onClick={openFileDialog}
                 view="ghost"
                 iconLeft={IconAttach}
@@ -85,8 +76,9 @@ export const AddNewReportForm: FC<AddNewReportFormProps> = ({
             </>
           )}
         </DragNDropField>
-        <div className={css.fileContainer}>
-          {file && (
+
+        {file && (
+          <div className={styles.fileContainer}>
             <Attachment
               key={file.name}
               fileName={file.name}
@@ -98,20 +90,22 @@ export const AddNewReportForm: FC<AddNewReportFormProps> = ({
               onButtonClick={onDeleteFile}
               buttonIcon={IconClose}
             />
-          )}
-        </div>
+          </div>
+        )}
       </div>
 
-      <Button
-        className="m-t-4"
-        label="Сохранить"
-        size="m"
-        onClick={() => {
-          onAddNewReport(engineNumber, file);
-          onCloseModal();
-        }}
-        disabled={isSaveDisabled}
-      />
+      <div className={styles.addBtnContainer}>
+        <Button
+          className={styles.addBtn}
+          label="Сохранить"
+          size="m"
+          onClick={() => {
+            onAddNewReport(engineNumber, file);
+            onCloseModal();
+          }}
+          disabled={isSaveDisabled}
+        />
+      </div>
     </div>
   );
 };

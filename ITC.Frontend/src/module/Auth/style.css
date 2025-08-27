@@ -1,3 +1,14 @@
+.container{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+  height: 100vh;
+  background: url('http://89.108.73.166:8085/resources/vxy7q/login/keycloak.v2/img/keycloak-bg-darken.svg') no-repeat center center fixed;
+  background-size: cover;
+}
+
 .loginForm {
   display: flex;
   flex-direction: column;

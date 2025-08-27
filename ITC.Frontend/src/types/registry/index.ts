@@ -9,7 +9,7 @@ export type RegistryRow = {
 }
 
 export const TableFilterName = {
-  LIVE :'В реальном времени',
+  LIVE :'Подключенные',
   FILE : "Загруженные",
 } as const
 

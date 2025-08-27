@@ -1,0 +1,19 @@
+.notificationContainer {
+  pointer-events: none;
+
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  width: 100vw;
+  height: 100vh;
+}
+
+.notifications {
+  pointer-events: all;
+
+  position: absolute;
+  z-index: 1000;
+  top: 2.4rem;
+  right: 2.4rem;
+}

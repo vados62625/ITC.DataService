@@ -1,8 +1,21 @@
 .addNewReportFormModal {
-  height: 52rem;
+  height: fit-content;
   width: 85rem;
+  display: flex;
+  justify-content: center;
 }
 
 .fileContainer {
   height: 6rem;
+}
+
+.addBtnContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  width: 100%;
+}
+
+.addBtn {
+  width: 17.2rem;
 }

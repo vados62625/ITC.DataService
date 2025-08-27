@@ -3,12 +3,14 @@ import { combineReducers } from "redux";
 import { RegistrySlice } from "./registry";
 import { apiSlice } from "../api";
 import { AuthSlice } from "./auth";
+import { NotificationMiddleware, NotificationSlice } from "./notification";
 
 
 export const appReducer = combineReducers({
   auth: AuthSlice.reducer,
   registry: RegistrySlice.reducer,
-  api: apiSlice.reducer
+  api: apiSlice.reducer,
+  notification: NotificationSlice.reducer,
 });
 
 export function setupStore() {
@@ -18,7 +20,7 @@ export function setupStore() {
       getDefaultMiddleware({ serializableCheck: false })
         .prepend([
           // SignalRMiddleware.middleware,
-          // NotificationMiddleware.middleware,
+          NotificationMiddleware.middleware,
         ])
         .concat([apiSlice.middleware]),
   });

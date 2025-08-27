@@ -6,14 +6,14 @@ import { Popover } from "@consta/uikit/Popover";
 import { Button } from "@consta/uikit/Button";
 import { IconExit } from "@consta/uikit/IconExit";
 
-import css from "./style.css";
+import styles from "./style.css";
 import { useNavigate } from "react-router-dom";
 import { RoutePaths } from "../../types";
 import { AuthSlice } from "../../store";
 import { useSelector, useDispatch } from "react-redux";
 
 export const Navbar: FC<NavbarProps> = () => {
-  const ref = useRef(null);
+  const ref = useRef<HTMLDivElement>(null);
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
   const isUserAuthenticated = useSelector(AuthSlice.selectors.isUserAuthenticatedSelector);
   const { currentUser } = useSelector(AuthSlice.selectors.authSelector);
@@ -54,15 +54,15 @@ export const Navbar: FC<NavbarProps> = () => {
         rightSide={
           <>
             <HeaderModule>
-              <HeaderLogin
-                ref={ref}
-                isLogged={isUserAuthenticated}
-                personName={currentUser?.userName ?? ""}
-                onClick={onHeaderLoginClick}
-                placeholder={undefined}
-                onPointerEnterCapture={undefined}
-                onPointerLeaveCapture={undefined}
-              />
+              <div ref={ref}>
+                <HeaderLogin
+                  isLogged={isUserAuthenticated}
+                  personName={currentUser?.userName ?? ""}
+                  onClick={onHeaderLoginClick}
+                  placeholder={undefined}
+                  onPointerEnterCapture={undefined}
+                  onPointerLeaveCapture={undefined}
+                /></div>
 
               {isMenuOpen && (
                 <Popover
@@ -77,7 +77,7 @@ export const Navbar: FC<NavbarProps> = () => {
                   onPointerLeaveCapture={undefined}
                   placeholder={undefined}
                 >
-                  <div className={css.popover}>
+                  <div className={styles.popover}>
                     <Button
                       label="Выйти"
                       size="xs"
