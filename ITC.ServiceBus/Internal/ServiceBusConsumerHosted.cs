@@ -77,7 +77,8 @@ namespace ITC.ServiceBus.Internal
                 _log.LogTrace("Try consume message from topic {topic}. Partition: {partition}, Offset: {offset}",
                     cr.TopicPartition.Topic, cr.TopicPartition.Partition.Value, cr.TopicPartitionOffset.Offset.Value);
 
-                var consumerName = cr.Topic.Replace(TopicConstants.TypedTopicPrefix, "");
+                // var consumerName = cr.Topic.Replace(TopicConstants.TypedTopicPrefix, "");
+                var consumerName = cr.Topic;
 
                 var consumerType = _registry.GetConsumerType(consumerName);
 
