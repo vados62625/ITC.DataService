@@ -30,6 +30,7 @@
       - USE_KRB=False
       - SEGMENT_LENGTH=100
       - MODEL_PATH=./code/artifacts/model/defect_model.pkl
+      - ONNX_MODEL_DIR=./code/artifacts/model
   
   itc.reportservice:
     image: itc.reportservice

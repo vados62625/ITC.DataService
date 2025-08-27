@@ -1,40 +1,27 @@
 import numpy as np
 import pandas as pd
-import joblib
 from loguru import logger
 from scipy import signal, stats
-
-from src.common.config import settings
+import onnxruntime as rt
 import warnings
 
-import os
-import sys
-from contextlib import contextmanager
-
-
-@contextmanager
-def suppress_output():
-    with open(os.devnull, "w") as devnull:
-        old_stdout = sys.stdout
-        old_stderr = sys.stderr
-        sys.stdout = devnull
-        sys.stderr = devnull
-        try:
-            yield
-        finally:
-            sys.stdout = old_stdout
-            sys.stderr = old_stderr
-
+from src.common.config import settings
 
 warnings.filterwarnings("ignore")
 
 
 class ProcessData:
     def __init__(self) -> None:
-        self.model = joblib.load(settings.MODEL_PATH)
-
-    def predict(self, data: list[list[float]]) -> dict[str, float]:
-        defects = [
+        self.sessions = []
+        self.input_names = []
+        
+        for i in range(6):  
+            model_path = f"{settings.ONNX_MODEL_DIR}/model_estimator_{i}.onnx"
+            session = rt.InferenceSession(model_path)
+            self.sessions.append(session)
+            self.input_names.append(session.get_inputs()[0].name)
+        
+        self.defects = [
             "Дефект наружного кольца",
             "Дефект внутреннего кольца",
             "Дефект тел качения",
@@ -42,79 +29,91 @@ class ProcessData:
             "Дисбаланс",
             "Расцентровка",
         ]
-        logger.info(len(data))
 
+    def predict(self, data: list[list[float]]) -> dict[str, float]:
+        logger.info(f"Received data length: {len(data)}")
+        
         df = pd.DataFrame(data, columns=["R", "S", "T"])
-        df = df.dropna(axis=1, how="all")
-
-        # Обработка сегментов
+        df = df.dropna(axis=1, how='all')
+        
         n_segments = len(df) // settings.SEGMENT_LENGTH
-        predictions = []
+        if n_segments == 0:
+            logger.error("No segments available after preprocessing")
+            return {defect: 1.0 for defect in self.defects}
 
-        for i in range(n_segments):
-            start_idx = i * settings.SEGMENT_LENGTH
-            end_idx = (i + 1) * settings.SEGMENT_LENGTH
-            segment = df.iloc[start_idx:end_idx].values
-
-            # Извлечение признаков
+        # Precompute segments
+        segments = np.array_split(df.values[:n_segments * settings.SEGMENT_LENGTH], n_segments)
+        
+        # Extract features for all segments
+        all_features = []
+        for segment in segments:
             features = self.extract_features(segment)
-            if features.shape[0] == 0:
-                continue
+            if features.size > 0:
+                all_features.append(features)
+        
+        if not all_features:
+            logger.error("No valid features extracted")
+            return {defect: 1.0 for defect in self.defects}
 
-            # Предсказание
-            with suppress_output():
-                pred = self.model.predict(features)
-            predictions.append(np.mean(pred, axis=0))
+        # Для каждого сегмента делаем предсказания для всех estimators
+        all_predictions = []
+        
+        for features in all_features:
+            segment_predictions = []
+            
+            # Для каждого estimator (дефекта) делаем предсказание
+            for i, session in enumerate(self.sessions):
+                # Подготавливаем входные данные
+                input_data = features.astype(np.float32)
+                
+                # Делаем предсказание
+                ort_inputs = {self.input_names[i]: input_data}
+                ort_pred = session.run(None, ort_inputs)[0]
+                
+                # Усредняем предсказания для всех фаз в сегменте
+                segment_predictions.append(np.mean(ort_pred))
+            
+            all_predictions.append(segment_predictions)
+        
+        # Усредняем предсказания по всем сегментам
+        avg_pred = np.mean(all_predictions, axis=0)
+        
+        logger.info("Prediction completed successfully")
+        return {defect: float(score) for defect, score in zip(self.defects, avg_pred)}
 
-        if len(predictions) == 0:
-            logger.error("No valid segments found")
-            results = dict()
-            for name in defects:
-                results[name] = 0
-                print(f"{name}: {0}")
-            return results
+    def extract_features(self, segment: np.ndarray) -> np.ndarray:
+        """Векторизованное извлечение признаков из сегмента данных"""
+        # Удаляем строки с NaN значениями
+        segment = segment[~np.isnan(segment).any(axis=1)]
+        if segment.size == 0 or len(segment) < settings.SEGMENT_LENGTH:
+            return np.array([])
 
-        # Усреднение результатов
-        avg_pred = np.mean(predictions, axis=0)
+        # Вычисляем RMS для всех фаз одновременно
+        rms = np.sqrt(np.mean(segment**2, axis=0))
+        valid_phases = rms >= 1e-5
+        if not np.any(valid_phases):
+            return np.array([])
 
-        print("Степени развития дефектов:")
-        results = dict()
-        for name, value in zip(defects, avg_pred):
-            results[name] = value
-            print(f"{name}: {value:.4f}")
-        return results
+        # Применяем valid_phases маску
+        segment_valid = segment[:, valid_phases]
+        rms_valid = rms[valid_phases]
 
-    def extract_features(self, segment):
-        """Извлечение признаков из сегмента данных"""
-        features = []
+        # Вычисляем все статистики одновременно
+        mean_val = np.mean(segment_valid, axis=0)
+        std_val = np.std(segment_valid, axis=0)
+        skew_val = stats.skew(segment_valid, axis=0)
+        kurt_val = stats.kurtosis(segment_valid, axis=0)
+        peak_val = np.max(np.abs(segment_valid), axis=0)
+        crest_factor = np.divide(peak_val, rms_valid, where=rms_valid != 0)
 
-        # Для каждой фазы
-        for phase in range(segment.shape[1]):
-            x = segment[:, phase]
+        # Вычисляем огибающую через преобразование Гильберта
+        analytic_signal = signal.hilbert(segment_valid, axis=0)
+        envelope = np.abs(analytic_signal)
+        kurt_env = stats.kurtosis(envelope, axis=0)
 
-            # Пропустить NaN
-            x = x[~np.isnan(x)]
-            if len(x) < settings.SEGMENT_LENGTH:
-                continue
+        # Комбинируем все признаки
+        features = np.vstack([
+            mean_val, std_val, skew_val, kurt_val, peak_val, crest_factor, kurt_env
+        ]).T
 
-            # Вычисление RMS
-            rms = np.sqrt(np.mean(x**2))
-            if rms < 1e-5:
-                continue
-
-            # Временные признаки
-            mean_val = np.mean(x)
-            std_val = np.std(x)
-            skew_val = stats.skew(x)
-            kurt_val = stats.kurtosis(x)
-            peak_val = np.max(np.abs(x))
-            crest_factor = peak_val / rms
-
-            # Куртозис огибающей
-            analytic_signal = signal.hilbert(x)
-            envelope = np.abs(analytic_signal)
-            kurt_env = stats.kurtosis(envelope)
-
-            features.append([mean_val, std_val, skew_val, kurt_val, peak_val, crest_factor, kurt_env])
-
-        return np.array(features)
+        return features
