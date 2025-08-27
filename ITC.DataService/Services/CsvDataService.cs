@@ -38,15 +38,17 @@ public class CsvDataService : ICsvDataService
             
             var fileId = $"{fileName}___{Guid.NewGuid().ToString()}";
 
+            var dt = DateTime.Now;
             foreach (var chunk in chunks)
             {
-                var dto = new PhaseDataDto()
+                var dto = new PhaseDataDto
                 {
                     Data = chunk,
-                    FileId = fileId
+                    FileId = fileId,
+                    DateTime = dt,
                 };
-                
                 await _kafkaProducer.PublishAsync(default!, dto);
+                dt = dt.AddSeconds(1);
             }
 
             return true;
