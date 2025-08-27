@@ -2,5 +2,5 @@
 
 internal static class TopicConstants
 {
-    public const string TypedTopicPrefix = "TYPED.";
+    public const string TypedTopicPrefix = "";
 }

@@ -36,7 +36,7 @@ namespace ITC.ServiceBus.Internal
         public void Subscribe<TMessage>()
         {
             _registry.RegisterConsumer<TMessage>();
-            var topic = $"TYPED.{typeof(TMessage).Name}";
+            var topic = $"{typeof(TMessage).Name}";
             _log.LogInformation("SUB {topic}", topic);
             _topics.Add(topic);
             _consumer.Subscribe(_topics);
