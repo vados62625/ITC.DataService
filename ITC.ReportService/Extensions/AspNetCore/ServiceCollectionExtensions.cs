@@ -69,7 +69,7 @@ public static class ServiceCollectionExtensions
         self
             .AddServiceBusSerializer<CsvDataResponse, ServiceBusJsonSerializer<CsvDataResponse>>()
 
-            .AddMessageHandler<CsvDataResponse, AnalysisResultHandler>();
+            .AddMessageHandler<CsvDataResponse, CsvDataResponse.Handler>();
 
         return self;
     }

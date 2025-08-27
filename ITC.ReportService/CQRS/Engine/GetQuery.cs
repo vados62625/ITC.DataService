@@ -42,22 +42,22 @@ public class GetQueryHandler : IRequestHandler<GetQuery, PageableCollection<Engi
         {
             var dto = _mapper.Map<EngineDto>(result);
             var cage = result.Analyses.Where(a => a.CageDefect != 0)
-                .Select(x => new DefectHistoryDto { Probability = x.CageDefect })
+                .Select(x => new DefectHistoryDto { Probability = x.CageDefect, Date = x.CreatedAt.DateTime })
                 .ToList();
             var innerRing = result.Analyses.Where(a => a.InnerRingDefect != 0)
-                .Select(x => new DefectHistoryDto { Probability = x.InnerRingDefect })
+                .Select(x => new DefectHistoryDto { Probability = x.InnerRingDefect, Date = x.CreatedAt.DateTime })
                 .ToList();
             var misalignment = result.Analyses.Where(a => a.Misalignment != 0)
-                .Select(x => new DefectHistoryDto { Probability = x.Misalignment })
+                .Select(x => new DefectHistoryDto { Probability = x.Misalignment, Date = x.CreatedAt.DateTime })
                 .ToList();
             var outerRingDefect = result.Analyses.Where(a => a.OuterRingDefect != 0)
-                .Select(x => new DefectHistoryDto { Probability = x.OuterRingDefect })
+                .Select(x => new DefectHistoryDto { Probability = x.OuterRingDefect, Date = x.CreatedAt.DateTime})
                 .ToList();
             var rollingElementsDefect = result.Analyses.Where(a => a.RollingElementsDefect != 0)
-                .Select(x => new DefectHistoryDto { Probability = x.RollingElementsDefect })
+                .Select(x => new DefectHistoryDto { Probability = x.RollingElementsDefect, Date = x.CreatedAt.DateTime })
                 .ToList();
             var unbalance = result.Analyses.Where(a => a.Unbalance != 0)
-                .Select(x => new DefectHistoryDto { Probability = x.Unbalance })
+                .Select(x => new DefectHistoryDto { Probability = x.Unbalance, Date = x.CreatedAt.DateTime })
                 .ToList();
             dto.Defects = new List<DefectDto>()
             {

@@ -10,67 +10,55 @@ namespace ITC.ReportService.ServiceBus;
 
 public class CsvDataResponse
 {
-    public DefectsDto Defects { get; set; } = new DefectsDto();
-    
-    [JsonPropertyName("file_id")]
-    public string FileId { get; set; } = string.Empty;
-    
-    public class DefectsDto
-    {
-        [JsonPropertyName("Дефект наружного кольца")]
-        public double OuterRingDefect { get; set; }
-        
-        [JsonPropertyName("Дефект внутреннего кольца")]
-        public double InnerRingDefect { get; set; }
-        
-        [JsonPropertyName("Дефект тел качения")]
-        public double RollingElementsDefect { get; set; }
-        
-        [JsonPropertyName("Дефект сепаратора")]
-        public double CageDefect { get; set; }
-        
-        [JsonPropertyName("Дисбаланс")]
-        public double Unbalance { get; set; }
-        
-        [JsonPropertyName("Расцентровка")]
-        public double Misalignment { get; set; }
-    }
-    
+    [JsonPropertyName("defects")]
+    public Dictionary<string, double> Defects { get; set; } = new();
+
+    [JsonPropertyName("file_id")] public string FileId { get; set; } = string.Empty;
+
     public class Handler : IServiceBusMessageHandler<CsvDataResponse>
     {
         private readonly AppDbContext _db;
 
-        public Handler (AppDbContext db)
+        public Handler(AppDbContext db)
         {
             _db = db;
         }
+
         public async Task Handle(CsvDataResponse message, IDictionary<string, string> headers, DateTimeOffset timestamp,
             CancellationToken cancellationToken)
         {
             var fileData = message.FileId.Split("___");
             var fileName = fileData.FirstOrDefault();
             if (!Guid.TryParse(fileData.LastOrDefault(), out var fileId)) return;
-            
+
             var engine = await _db.Set<Engine>()
-                .FirstOrDefaultAsync(x => x.Id == fileId, cancellationToken) ?? new Engine
+                .FirstOrDefaultAsync(x => x.Id == fileId, cancellationToken);
+
+            if (engine == null)
             {
-                Id = fileId,
-                Name = fileName,
-                EngineType = EngineType.Live
-            };
+                engine = new Engine
+                {
+                    Id = fileId,
+                    Name = fileName,
+                    EngineType = EngineType.Live
+                };
+                _db.Set<Engine>().Add(engine);
+                await _db.SaveChangesAsync(cancellationToken);
+            }
+
             engine.EngineStatus = EngineStatus.Success;
 
             _db.Set<Engine>().Update(engine);
             
-            var entity =  new Analysis
+            var entity = new Analysis
             {
                 EngineId = fileId,
-                CageDefect = message.Defects.CageDefect,
-                OuterRingDefect = message.Defects.OuterRingDefect,
-                InnerRingDefect = message.Defects.InnerRingDefect,
-                RollingElementsDefect = message.Defects.RollingElementsDefect,
-                Unbalance = message.Defects.Unbalance,
-                Misalignment = message.Defects.Misalignment,
+                CageDefect = message.Defects.GetValueOrDefault("Дефект сепаратора", 0),
+                OuterRingDefect = message.Defects.GetValueOrDefault("Дефект наружного кольца", 0),
+                InnerRingDefect = message.Defects.GetValueOrDefault("Дефект внутреннего кольца", 0),
+                RollingElementsDefect = message.Defects.GetValueOrDefault("Дефект тел качения", 0),
+                Unbalance = message.Defects.GetValueOrDefault("Дисбаланс", 0),
+                Misalignment = message.Defects.GetValueOrDefault("Расцентровка", 0),
             };
 
             _db.Set<Analysis>().Update(entity);
