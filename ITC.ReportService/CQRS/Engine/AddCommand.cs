@@ -61,7 +61,7 @@ public class AddCommandWrapper : IRequest<EngineDto>
                 .ProjectTo<EngineDto>(_mapper.ConfigurationProvider)
                 .FirstAsync(cancellationToken);
 
-            await _dataServiceClient.UploadCsv(request.File);
+            await _dataServiceClient.UploadCsv(request.File, dto.Id);
             return dto;
         }
     }
