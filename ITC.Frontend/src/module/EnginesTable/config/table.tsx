@@ -1,7 +1,7 @@
 import React from 'react'
 import type { ColumnsType } from 'antd/es/table'
 
-import { CONTEXT_ITEMS } from './contextButton'
+import { CONTEXT_ACTION, CONTEXT_ITEMS } from './contextButton'
 import { Badge, BadgePropStatus } from '@consta/uikit/Badge'
 
 import styles from './styles.css'
@@ -10,13 +10,15 @@ import { ContextButton } from '../../../components'
 import { getRuDate } from '../../../utils'
 
 type Props = {
-  onContextClick: (record: RegistryRow) => void
-  mode: TableFilterType
+  mode: TableFilterType,
+  onOpenRemoveModal: (selectedEngine: RegistryRow) => void
 }
 export const getColumnsConfig = ({
-  onContextClick,
-  mode
-}: Props): ColumnsType<RegistryRow> => [
+  mode,
+  onOpenRemoveModal
+}: Props): ColumnsType<RegistryRow> => {
+
+  return [
     {
       title: 'Наименование',
       dataIndex: 'name',
@@ -88,11 +90,14 @@ export const getColumnsConfig = ({
           <ContextButton
             size="xs"
             items={CONTEXT_ITEMS}
-            getOnClick={() => {
-              onContextClick(record)
+            getOnClick={(item) => {
+              if (item.key === CONTEXT_ACTION.remove) { 
+               onOpenRemoveModal(record)
+              }
             }}
           />
         )
       },
     },
   ]
+}

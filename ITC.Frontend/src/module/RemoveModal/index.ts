@@ -1,0 +1,1 @@
+export { RemoveModal } from './ui'

@@ -2,7 +2,7 @@ import type { InitialState } from './types'
 
 export const initialState: InitialState = {
   mode: 'FILE',
-  modal: {
+  addModal: {
     file: null,
     name: '',
     isOpen: false
@@ -11,5 +11,9 @@ export const initialState: InitialState = {
     limit: 0,
     total: 0,
     curentPageNumber: 0
+  },
+  removeModal: {
+    isOpen: false,
+    selectedEngine: null
   }
 }
