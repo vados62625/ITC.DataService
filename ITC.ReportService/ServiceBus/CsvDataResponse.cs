@@ -48,7 +48,7 @@ public class CsvDataResponse
                     engine = new Engine
                     {
                         Id = fileId,
-                        Name = fileName,
+                        Name = engineName,
                         EngineType = EngineType.Live
                     };
                     _db.Set<Engine>().Add(engine);
