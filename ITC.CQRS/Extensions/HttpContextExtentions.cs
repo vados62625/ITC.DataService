@@ -22,7 +22,7 @@ public static class HttpContextExtentions
 
     public static string GetUserName(this ClaimsPrincipal userClaimsPrincipal)
     {
-        return userClaimsPrincipal.FindFirst(ClaimTypes.Name)?.Value ?? "";
+        return userClaimsPrincipal.FindFirst("name")?.Value ?? "";
     }
 
     public static string[] GetUserRoles(this ClaimsPrincipal userClaimsPrincipal)

@@ -19,7 +19,7 @@ public class CsvDataService : ICsvDataService
         _kafkaProducer = kafkaProducer;
     }
 
-    public async Task<bool> UploadCsv(Stream fileStream, string fileName)
+    public async Task<bool> UploadCsv(Stream fileStream, string? fileName)
     {
         try
         {
@@ -48,7 +48,7 @@ public class CsvDataService : ICsvDataService
                     DateTime = dt,
                 };
                 await _kafkaProducer.PublishAsync(default!, dto);
-                dt = dt.AddSeconds(1);
+                dt = dt.AddSeconds(3);
             }
 
             return true;

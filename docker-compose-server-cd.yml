@@ -93,3 +93,16 @@
       - USE_KRB=False
       - SEGMENT_LENGTH=100
       - MODEL_PATH=./code/artifacts/model/defect_model.pkl
+  
+  grafana:
+    image: grafana/grafana-oss
+    container_name: grafana
+    restart: unless-stopped
+    # if you are running as root then set it to 0
+    # else find the right id with the id -u command
+    user: '0'
+    ports:
+      - '3000:3000'
+    # adding the mount volume point which we create earlier
+    volumes:
+      - '$PWD/data:/var/lib/grafana'
