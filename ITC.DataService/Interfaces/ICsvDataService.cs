@@ -2,5 +2,5 @@
 
 public interface ICsvDataService
 {
-    Task<bool> UploadCsv(Stream fileStream, string? fileName);
+    Task<bool> UploadCsv(Stream fileStream, string? fileName, Guid? fileId = null);
 }

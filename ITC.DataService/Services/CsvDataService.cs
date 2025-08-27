@@ -19,7 +19,7 @@ public class CsvDataService : ICsvDataService
         _kafkaProducer = kafkaProducer;
     }
 
-    public async Task<bool> UploadCsv(Stream fileStream, string? fileName)
+    public async Task<bool> UploadCsv(Stream fileStream, string? fileName, Guid? fileId = null)
     {
         try
         {
@@ -36,7 +36,8 @@ public class CsvDataService : ICsvDataService
                 }).ToArray())
                 .Chunk(chunkSize);
             
-            var fileId = $"{fileName}___{Guid.NewGuid().ToString()}";
+            fileId ??= Guid.NewGuid();
+            var fileIdString = $"{fileName}___{fileId}";
 
             var dt = DateTime.Now;
             foreach (var chunk in chunks)
@@ -44,7 +45,7 @@ public class CsvDataService : ICsvDataService
                 var dto = new PhaseDataDto
                 {
                     Data = chunk,
-                    FileId = fileId,
+                    FileId = fileIdString,
                     DateTime = dt,
                 };
                 await _kafkaProducer.PublishAsync(default!, dto);

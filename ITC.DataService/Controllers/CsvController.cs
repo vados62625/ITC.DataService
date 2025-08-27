@@ -22,10 +22,11 @@ public class CsvController : ControllerBase
     /// Загрузка csv-файла с показаниями трехфазного электродвигателя
     /// </summary>
     /// <param name="file"></param>
+    /// <param name="engineId"></param>
     /// <returns></returns>
     [HttpPost("Upload")]
     [RequestFormLimits(MultipartBodyLengthLimit = long.MaxValue)]
-    public async Task<IActionResult> UploadCsv(IFormFile? file)
+    public async Task<IActionResult> UploadCsv(IFormFile? file, Guid? engineId)
     {
         try
         {
@@ -39,7 +40,7 @@ public class CsvController : ControllerBase
             }
 
             await using var stream = file.OpenReadStream();
-            var success = await _csvDataService.UploadCsv(stream, file.FileName);
+            var success = await _csvDataService.UploadCsv(stream, file.FileName, engineId);
             if (!success)
             {
                 return StatusCode(500, "Failed to send data to Kafka");
