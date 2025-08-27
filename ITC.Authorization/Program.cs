@@ -38,7 +38,7 @@ builder.Services.AddServiceDbContext<ServiceDbContext>(builder.Configuration["Db
 
 builder.Services.Configure<KeycloakClientOptions>(builder.Configuration.GetSection("Keycloak"));
 
-builder.Services.AddHostedService<UpdateUserRolesBackgroundService>();
+// builder.Services.AddHostedService<UpdateUserRolesBackgroundService>();
 builder.Services.AddScoped<IUserRolesCacheService, UserRolesCacheService>();
 builder.Services.AddSingleton<ISystemClock>(new SystemClock());
 
