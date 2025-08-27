@@ -12,4 +12,4 @@ class DataHandler(BaseHandler[Defects]):
         input_bytes = message_in.value
         input_data = InputData.model_validate_json(input_bytes)
         defects = self.process_data.predict(data=input_data.data)
-        return Defects(defects=defects, file_id=input_data.FileId)
+        return Defects(defects=defects, file_id=input_data.FileId, datetime=input_data.DateTime)
