@@ -110,7 +110,7 @@ export class EnginesClient {
      * @param file (optional) 
      * @return OK
      */
-    enginesPost(name: string | undefined, file: FileParameter | undefined, signal?: AbortSignal): Promise<EngineDto> {
+    enginesPost(name: string | undefined, file: { data: any, fileName: string} | undefined, signal?: AbortSignal): Promise<EngineDto> {
         let url_ = this.baseUrl + "/Engines?";
         if (name === null)
             throw new Error("The parameter 'name' cannot be null.");
@@ -415,11 +415,13 @@ export interface IDefectHistoryDto {
 
 export class EngineDto implements IEngineDto {
     isLastAnalyseHasDefect?: boolean;
+    isLastAnalyseHasCriticalDefect?: boolean;
     name?: string;
     engineStatus?: number;
     engineType?: number;
     defects?: DefectDto[];
     lastAnalyseDate?: Date;
+    recommendedMaintenanceDate?: Date | undefined;
     id?: string;
     deletedAt?: Date | undefined;
     updatedAt?: Date | undefined;
@@ -443,6 +445,7 @@ export class EngineDto implements IEngineDto {
                     this[property] = _data[property];
             }
             this.isLastAnalyseHasDefect = _data["isLastAnalyseHasDefect"];
+            this.isLastAnalyseHasCriticalDefect = _data["isLastAnalyseHasCriticalDefect"];
             this.name = _data["name"];
             this.engineStatus = _data["engineStatus"];
             this.engineType = _data["engineType"];
@@ -452,6 +455,7 @@ export class EngineDto implements IEngineDto {
                     this.defects!.push(DefectDto.fromJS(item));
             }
             this.lastAnalyseDate = _data["lastAnalyseDate"] ? new Date(_data["lastAnalyseDate"].toString()) : <any>undefined;
+            this.recommendedMaintenanceDate = _data["recommendedMaintenanceDate"] ? new Date(_data["recommendedMaintenanceDate"].toString()) : <any>undefined;
             this.id = _data["id"];
             this.deletedAt = _data["deletedAt"] ? new Date(_data["deletedAt"].toString()) : <any>undefined;
             this.updatedAt = _data["updatedAt"] ? new Date(_data["updatedAt"].toString()) : <any>undefined;
@@ -473,6 +477,7 @@ export class EngineDto implements IEngineDto {
                 data[property] = this[property];
         }
         data["isLastAnalyseHasDefect"] = this.isLastAnalyseHasDefect;
+        data["isLastAnalyseHasCriticalDefect"] = this.isLastAnalyseHasCriticalDefect;
         data["name"] = this.name;
         data["engineStatus"] = this.engineStatus;
         data["engineType"] = this.engineType;
@@ -482,6 +487,7 @@ export class EngineDto implements IEngineDto {
                 data["defects"].push(item.toJSON());
         }
         data["lastAnalyseDate"] = this.lastAnalyseDate ? this.lastAnalyseDate.toISOString() : <any>undefined;
+        data["recommendedMaintenanceDate"] = this.recommendedMaintenanceDate ? this.recommendedMaintenanceDate.toISOString() : <any>undefined;
         data["id"] = this.id;
         data["deletedAt"] = this.deletedAt ? this.deletedAt.toISOString() : <any>undefined;
         data["updatedAt"] = this.updatedAt ? this.updatedAt.toISOString() : <any>undefined;
@@ -492,11 +498,13 @@ export class EngineDto implements IEngineDto {
 
 export interface IEngineDto {
     isLastAnalyseHasDefect?: boolean;
+    isLastAnalyseHasCriticalDefect?: boolean;
     name?: string;
     engineStatus?: number;
     engineType?: number;
     defects?: DefectDto[];
     lastAnalyseDate?: Date;
+    recommendedMaintenanceDate?: Date | undefined;
     id?: string;
     deletedAt?: Date | undefined;
     updatedAt?: Date | undefined;
@@ -615,11 +623,6 @@ export interface IUpdateCommand {
     id: string;
 
     [key: string]: any;
-}
-
-export interface FileParameter {
-    data: any;
-    fileName: string;
 }
 
 export class ApiException extends Error {

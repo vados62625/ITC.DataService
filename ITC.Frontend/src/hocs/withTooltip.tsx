@@ -32,7 +32,7 @@ export function withTooltip<T>(WrappedComponent: React.ComponentType<T>) {
           <Tooltip
             className={css.tooltip}
             anchorRef={ref}
-            direction={props.direction ?? "upCenter"}
+            direction='upStartRight'
             size="l"
             placeholder={undefined}
             onPointerEnterCapture={undefined}

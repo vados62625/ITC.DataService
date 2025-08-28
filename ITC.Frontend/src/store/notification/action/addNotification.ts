@@ -3,8 +3,9 @@ import { createAsyncThunk } from '@reduxjs/toolkit'
 import { v4 as uuidv4 } from 'uuid'
 
 import { NotificationSlice } from '../model'
+import { RootState } from '../../../store/store'
 
-type AddNotificationArgs = {
+export type AddNotificationArgs = {
   message: string
   status: 'alert' | 'success'
   id?: string
@@ -18,7 +19,7 @@ export const addNotification = createAsyncThunk<void, AddNotificationArgs>(
     const notification: SnackBarItemDefault = {
       key: notificationId,
       showProgress: 'line',
-      autoClose: 2,
+      autoClose: false,
       message,
       status,
       onClose: () => dispatch(NotificationSlice.actions.deleteNotification(notificationId)),

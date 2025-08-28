@@ -15,16 +15,6 @@ export const EnginesTable = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  // const [lazyGetByFilter, { data, isLoading } ]= EngineApi.useLazyGetAllByFilterQuery()
-
-  // useEffect(() => {
-  //   const interval = setInterval(() => {
-  //     lazyGetByFilter(mode).refetch()
-  //   }, 3000);
-
-  //   return () => clearTimeout(interval);
-  // }, [mode, lazyGetByFilter]);
-
   const{ data, isLoading } = EngineApi.useGetAllByFilterQuery(mode)
 
   const onRowClick = (record: RegistryRow) => {

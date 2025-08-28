@@ -1,11 +1,19 @@
 .container {
   display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  width: 100%;
+}
+
+.analytics {
+  display: flex;
   justify-content: center;
 
   width: 100%;
-  height: 100vh;
 
   padding-top: 1.8rem;
+  padding-bottom: 1.8rem;
 
   overflow: auto;
 }
@@ -13,9 +21,9 @@
 .containerColumn {
   display: flex;
   flex-direction: column;
+  justify-content: center;
 
   width: 80rem;
-  height: 60rem;
 
   background-color: var(--color-bg-default);
   border-radius: 0.8rem;
@@ -27,7 +35,6 @@
   flex-direction: column;
 
   width: 80rem;
-  height: 60rem;
 
   background-color: var(--color-bg-default);
   border-radius: 0.8rem;
@@ -42,4 +49,38 @@
 
   width: 100%;
   height: 100%;
+}
+
+.informer {
+  width: 55rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.alert {
+  background-color: rgba(235, 87, 87, 1);
+  padding-top: 0.2rem;
+}
+
+.warning {
+  background-color: rgba(243, 139, 0, 1);
+  padding-top: 0.5rem;
+}
+
+.normal {
+  background-color: rgba(86, 185, 242, 1);
+  padding-top: 0.4rem;
+}
+
+.cercle {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 25px;
+  height: 25px;
+  border-radius: 100%;
+}
+
+.cercle path {
+  fill: white !important;
 }

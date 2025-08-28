@@ -3,11 +3,14 @@ import type { ColumnsType } from 'antd/es/table'
 
 import { CONTEXT_ACTION, CONTEXT_ITEMS } from './contextButton'
 import { Badge, BadgePropStatus } from '@consta/uikit/Badge'
-
+import { Text } from '@consta/uikit/Text'
 import styles from './styles.css'
 import { RegistryRow, TableFilterType } from '../../../types'
 import { ContextButton } from '../../../components'
 import { getRuDate } from '../../../utils'
+import { IconAlert } from '@consta/uikit/IconAlert'
+import { withTooltip } from '../../../hocs'
+import cn from 'classnames'
 
 type Props = {
   mode: TableFilterType,
@@ -27,6 +30,31 @@ export const getColumnsConfig = ({
         return <div className={styles.textWithWrap}>{record.name}</div>
       },
     },
+    {
+      title: 'Состояние',
+      dataIndex: 'recommendedMaintenanceDate',
+      width: '10%',
+      render(_, record) {
+        if(!record.recommendedMaintenanceDate){
+          return null
+        }
+        
+        const IconAlertWithTooltip = withTooltip(() => {
+          return (
+            <IconAlert size='s' />
+          );
+        });
+
+        return <div className={cn(styles.cercle, styles.alert)}>
+          <IconAlertWithTooltip>
+            <Text style={{ color: '#fff' }} size='s'>
+              {`Прогнозируемая дата отказа двигателя: ${record.recommendedMaintenanceDate.toLocaleDateString()}`}
+            </Text>
+          </IconAlertWithTooltip>
+        </div>
+      },
+    },
+
     {
       title: 'Статус',
       dataIndex: 'status',
@@ -91,8 +119,8 @@ export const getColumnsConfig = ({
             size="xs"
             items={CONTEXT_ITEMS}
             getOnClick={(item) => {
-              if (item.key === CONTEXT_ACTION.remove) { 
-               onOpenRemoveModal(record)
+              if (item.key === CONTEXT_ACTION.remove) {
+                onOpenRemoveModal(record)
               }
             }}
           />

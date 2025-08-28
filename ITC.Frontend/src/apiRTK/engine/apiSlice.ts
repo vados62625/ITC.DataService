@@ -23,7 +23,9 @@ const adapter = (engine: EngineDto): RegistryRow => ({
     name: engine.name ?? '',
     status: getLocalStatus(engine.status),
     isLastAnalyseHasDefect: !!engine.isLastAnalyseHasDefect,
-    lastAnalazeDate: String(engine.lastAnalyseDate)
+    isLastAnalyseHasCriticalDefect: !!engine.isLastAnalyseHasCriticalDefect,
+    lastAnalazeDate: String(engine.lastAnalyseDate),
+    recommendedMaintenanceDate: engine.recommendedMaintenanceDate
 })
 
 export const EngineApi = apiSlice.injectEndpoints({
@@ -376,13 +378,6 @@ export const EngineApi = apiSlice.injectEndpoints({
                         status: 'CUSTOM_ERROR',
                         error: error instanceof Error ? error.message : 'Unknown error'
                     };
-                    dispatch(
-                        addNotification({
-                            status: 'alert',
-                            message: `Ошибка при добавлении данных двигателя`,
-                        })
-                    )
-
                     console.log('fetchError', fetchError);
 
                     return {
@@ -402,7 +397,7 @@ export const EngineApi = apiSlice.injectEndpoints({
                             status: 'success',
                             message: `Данные двигателя успешно удалены`,
                         })
-                    )
+                    )   
                     return {
                         data,
                     }

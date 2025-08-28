@@ -5,7 +5,9 @@ export type RegistryRow = {
   name: string
   status: EngineStatus
   isLastAnalyseHasDefect: boolean
+  isLastAnalyseHasCriticalDefect: boolean
   lastAnalazeDate: string
+  recommendedMaintenanceDate: Date | undefined
 }
 
 export const TableFilterName = {

@@ -4,3 +4,21 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+
+.alert {
+  background-color: rgba(235, 87, 87, 1);
+  padding-top: 0.5rem;
+}
+
+.cercle {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 25px;
+  height: 25px;
+  border-radius: 100%;
+}
+
+.cercle path {
+  fill: white !important;
+}

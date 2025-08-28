@@ -16,10 +16,7 @@ export const NotificationSlice = createSlice({
   reducers: {
     setInitialState: () => initialState,
     addNotification: (state, action: PayloadAction<SnackBarItemDefault>) => {
-      const isNotificationExist = Boolean(state.items[action.payload.key])
-      if (!isNotificationExist) {
         state.items[action.payload.key] = action.payload
-      }
     },
     deleteNotification: (state, action: PayloadAction<SnackBarItemDefault['key']>) => {
       /* C Map работать не будет, дока RTK советуют не использовать Несериализуемые значения
