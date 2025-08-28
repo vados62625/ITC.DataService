@@ -93,10 +93,13 @@ app.UseSwagger()
             ShowCommonExtensions = true,
         };
     });
-app.UseCors(c => c.WithOrigins()
+app.UseCors(c => c.WithOrigins("http://89.108.73.166", "http://7-volt.ru")
     .AllowAnyOrigin()
     .AllowAnyHeader()
-    .AllowAnyMethod());
+    .AllowAnyMethod()
+    .SetIsOriginAllowed((x) => true)
+    .AllowCredentials());
+
 app.MapControllers();
 app.MapHub<EngineHub>("/engineHub");
 
