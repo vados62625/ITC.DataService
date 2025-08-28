@@ -1,7 +1,10 @@
 using System.Text.Json.Serialization;
 using ITC.Domain.Enums;
 using ITC.Domain.Models;
+using ITC.ReportService.CQRS.Engine;
 using ITC.ReportService.Database;
+using ITC.ReportService.Hub;
+using ITC.ReportService.Services;
 using ITC.ServiceBus.Interfaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -10,22 +13,23 @@ namespace ITC.ReportService.ServiceBus;
 
 public class CsvDataResponse
 {
-    [JsonPropertyName("defects")]
-    public Dictionary<string, double> Defects { get; set; } = new();
+    [JsonPropertyName("defects")] public Dictionary<string, double> Defects { get; set; } = new();
 
-    [JsonPropertyName("file_id")] 
-    public string FileId { get; set; } = string.Empty;
-    
-    [JsonPropertyName("datetime")] 
-    public DateTime DateTime { get; set; }
+    [JsonPropertyName("file_id")] public string FileId { get; set; } = string.Empty;
+
+    [JsonPropertyName("datetime")] public DateTime DateTime { get; set; }
 
     public class Handler : IServiceBusMessageHandler<CsvDataResponse>
     {
         private readonly AppDbContext _db;
+        private readonly IMediator _mediator;
+        private readonly ISignalRService _signalRService;
 
-        public Handler(AppDbContext db)
+        public Handler(AppDbContext db, IMediator mediator, ISignalRService signalRService)
         {
             _db = db;
+            _mediator = mediator;
+            _signalRService = signalRService;
         }
 
         public async Task Handle(CsvDataResponse message, IDictionary<string, string> headers, DateTimeOffset timestamp,
@@ -42,7 +46,8 @@ public class CsvDataResponse
             {
                 var engineName = Path.GetFileNameWithoutExtension(fileName);
                 engine = await _db.Set<Engine>()
-                    .FirstOrDefaultAsync(x => x.Name == engineName && x.EngineType == EngineType.Live, cancellationToken);
+                    .FirstOrDefaultAsync(x => x.Name == engineName && x.EngineType == EngineType.Live,
+                        cancellationToken);
                 if (engine == null)
                 {
                     engine = new Engine
@@ -58,11 +63,8 @@ public class CsvDataResponse
 
             engine.EngineStatus = EngineStatus.Success;
 
-            // _db.Set<Engine>().Update(engine);
-            
             var entity = new Analysis
             {
-                // EngineId = fileId,
                 CageDefect = message.Defects.GetValueOrDefault("Дефект сепаратора", 0),
                 OuterRingDefect = message.Defects.GetValueOrDefault("Дефект наружного кольца", 0),
                 InnerRingDefect = message.Defects.GetValueOrDefault("Дефект внутреннего кольца", 0),
@@ -71,12 +73,18 @@ public class CsvDataResponse
                 Misalignment = message.Defects.GetValueOrDefault("Расцентровка", 0),
                 DateTime = message.DateTime,
             };
-            
+
             engine.Analyses.Add(entity);
 
-            // _db.Set<Analysis>().Update(entity);
-
             await _db.SaveChangesAsync(cancellationToken);
+
+            await NotifySignalr(engine.Id, cancellationToken);
+        }
+
+        private async Task NotifySignalr(Guid engineId, CancellationToken cancellationToken)
+        {
+            var dto = await _mediator.Send(new GetQuery { Id = engineId }, cancellationToken);
+            await _signalRService.SendMessageToAllAsync(EngineHub.NewEngineNotificationMethodName, dto);            
         }
     }
 }

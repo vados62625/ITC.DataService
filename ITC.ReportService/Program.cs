@@ -2,6 +2,7 @@ using System.Reflection;
 using ITC.CQRS.Extensions;
 using ITC.ReportService.Database;
 using ITC.ReportService.Extensions.AspNetCore;
+using ITC.ReportService.Hub;
 using ITC.ReportService.Services;
 using ITC.ServiceBus.Exceptions;
 using Microsoft.AspNetCore.Http.Features;
@@ -21,6 +22,7 @@ IConfiguration configuration = new ConfigurationBuilder()
 
 builder.Services.AddControllers()
     .AddNewtonsoftJson();
+builder.Services.AddSignalR();
 
 builder.Services.AddOpenApi();
 
@@ -40,6 +42,8 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.AddInterceptors(new EntityBaseInterceptor(clock));
 });
 builder.Services.AddScoped<DbContext>(provider => provider.GetService<AppDbContext>()!);
+
+builder.Services.AddScoped<ISignalRService, SignalRService>();
 
 builder.Services.AddMemoryCache();
 builder.Services.AddCors();
@@ -94,5 +98,6 @@ app.UseCors(c => c.WithOrigins()
     .AllowAnyHeader()
     .AllowAnyMethod());
 app.MapControllers();
+app.MapHub<EngineHub>("/engineHub");
 
 app.Run();

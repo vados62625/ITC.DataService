@@ -3,6 +3,7 @@ using AutoMapper.QueryableExtensions;
 using FluentValidation;
 using ITC.Domain.Dto;
 using ITC.Domain.Enums;
+using ITC.ReportService.Hub;
 using ITC.ReportService.Services;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -31,14 +32,16 @@ public class AddCommandWrapper : IRequest<EngineDto>
         private readonly IMapper _mapper;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IDataServiceClient _dataServiceClient;
+        private readonly ISignalRService _signalRService;
 
         public AddCommandHandler(IMapper mapper, DbContext dbContext, IHttpContextAccessor httpContextAccessor,
-            IDataServiceClient dataServiceClient)
+            IDataServiceClient dataServiceClient, ISignalRService signalRService)
         {
             _dbContext = dbContext;
             _mapper = mapper;
             _httpContextAccessor = httpContextAccessor;
             _dataServiceClient = dataServiceClient;
+            _signalRService = signalRService;
         }
 
         public async Task<EngineDto> Handle(AddCommandWrapper request, CancellationToken cancellationToken)
@@ -60,6 +63,8 @@ public class AddCommandWrapper : IRequest<EngineDto>
                 .Where(c => c.Id == entity.Id)
                 .ProjectTo<EngineDto>(_mapper.ConfigurationProvider)
                 .FirstAsync(cancellationToken);
+
+            await _signalRService.SendMessageToAllAsync(EngineHub.NewEngineNotificationMethodName, dto);
 
             await _dataServiceClient.UploadCsv(request.File, dto.Id);
             return dto;
