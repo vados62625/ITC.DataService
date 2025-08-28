@@ -3,7 +3,6 @@ import { Details, Registry } from "../../pages";
 import React from "react";
 import { RoutePaths } from "../../types";
 import { Auth, Navbar, PrivateRoute } from "..";
-import { PageNotFoundPlaceholder } from "../../components";
 import { useSelector } from "react-redux";
 import { AuthSlice } from "../../store";
 
@@ -13,41 +12,27 @@ export const Routers: React.FC = () => {
   return (
     <Router>
       {isUserAuthenticated === true && <Navbar />}
-
       <Routes>
         <Route
           path={`${RoutePaths.Details}/:id`}
           element={
-            <PrivateRoute>
-              <Details />
-            </PrivateRoute>
+            <Details />
           }
         />
         <Route
           path={RoutePaths.Registry}
           element={
-            <PrivateRoute>
-              <Registry />
-            </PrivateRoute>
+            <Registry />
+
           }
         />
         <Route
           path={RoutePaths.Home}
           element={
-            <PrivateRoute>
-              <Registry />
-            </PrivateRoute>
+            <Registry />
           }
         />
-        <Route
-          path={RoutePaths.All}
-          element={
-            <PrivateRoute>
-              <PageNotFoundPlaceholder />
-            </PrivateRoute>
-          }
-        />
-        <Route path={RoutePaths.Auth} element={<Auth />} />
+        <Route path={RoutePaths.All} element={<Registry />} />
       </Routes>
     </Router>
   );

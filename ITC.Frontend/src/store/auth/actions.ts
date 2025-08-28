@@ -17,8 +17,19 @@ export const loginAndFetchUser = createAsyncThunk(
         })
       });
 
+
+      if (loginResponse.status === 401) {
+        dispatch(
+          addNotification({
+            status: 'alert',
+            message: 'Неправильный логин или пароль',
+          })
+        )
+        return
+      }
+
       if (!loginResponse.ok) {
-       throw new Error()
+        throw new Error()
       }
 
       const loginData = await loginResponse.json();
@@ -37,7 +48,7 @@ export const loginAndFetchUser = createAsyncThunk(
       });
 
       if (!userResponse.ok) {
-       throw new Error()
+        throw new Error()
       }
 
       const userData = await userResponse.json();
@@ -45,6 +56,8 @@ export const loginAndFetchUser = createAsyncThunk(
 
       return true
     } catch (error: any) {
+      console.log(error);
+
       dispatch(
         addNotification({
           status: 'alert',

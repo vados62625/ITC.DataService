@@ -20,7 +20,7 @@ export class EnginesClient {
 
         this.instance = instance || axios.create();
 
-        this.baseUrl = baseUrl ?? "http://localhost:5027/";
+        this.baseUrl = baseUrl ?? "http://89.108.73.166:5016/";
 
     }
 
@@ -416,7 +416,7 @@ export interface IDefectHistoryDto {
 export class EngineDto implements IEngineDto {
     isLastAnalyseHasDefect?: boolean;
     name?: string;
-    status?: number;
+    engineStatus?: number;
     engineType?: number;
     defects?: DefectDto[];
     lastAnalyseDate?: Date;
@@ -444,7 +444,7 @@ export class EngineDto implements IEngineDto {
             }
             this.isLastAnalyseHasDefect = _data["isLastAnalyseHasDefect"];
             this.name = _data["name"];
-            this.status = _data["status"];
+            this.engineStatus = _data["engineStatus"];
             this.engineType = _data["engineType"];
             if (Array.isArray(_data["defects"])) {
                 this.defects = [] as any;
@@ -474,7 +474,7 @@ export class EngineDto implements IEngineDto {
         }
         data["isLastAnalyseHasDefect"] = this.isLastAnalyseHasDefect;
         data["name"] = this.name;
-        data["status"] = this.status;
+        data["engineStatus"] = this.engineStatus;
         data["engineType"] = this.engineType;
         if (Array.isArray(this.defects)) {
             data["defects"] = [];
@@ -493,7 +493,7 @@ export class EngineDto implements IEngineDto {
 export interface IEngineDto {
     isLastAnalyseHasDefect?: boolean;
     name?: string;
-    status?: number;
+    engineStatus?: number;
     engineType?: number;
     defects?: DefectDto[];
     lastAnalyseDate?: Date;

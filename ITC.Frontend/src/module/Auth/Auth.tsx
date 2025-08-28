@@ -4,14 +4,11 @@ import { Text } from "@consta/uikit/Text";
 import { TextField } from "@consta/uikit/TextField";
 import styles from "./style.css";
 import { loginAndFetchUser, useAppDispatch } from "../../store";
-import { useNavigate } from "react-router-dom";
-import { RoutePaths } from "../../types";
 
 export const Auth: FC = () => {
   const [login, setLogin] = useState<string | null>(null);
   const [password, setPassword] = useState<string | null>(null);
 
-  const navigate = useNavigate();
   const dispatch = useAppDispatch()
 
   const onChangeLogin = ({ value }: { value: string | null }) =>
@@ -22,13 +19,8 @@ export const Auth: FC = () => {
 
   const onLogin = () => {
     dispatch(loginAndFetchUser({ login: login ?? '', password: password ?? '' })).unwrap().then(isLogin => {
-      if (isLogin) {
-        navigate(RoutePaths.Registry);
-      }
-      else {
-        onChangeLogin({ value: null })
-        onChangePassword({ value: null })
-      }
+      onChangeLogin({ value: null })
+      onChangePassword({ value: null })
     }
     )
   };

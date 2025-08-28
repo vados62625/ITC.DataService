@@ -292,13 +292,10 @@ export const EngineApi = apiSlice.injectEndpoints({
 
                     return {
                         error: fetchError,
-                        // meta: {
-                        //     message: 'Ошибка получения данных реестра',
-                        // },
                     }
                 }
             },
-            providesTags: ['Engine'],
+            providesTags: ['Engine']
         }),
 
         getById: build.query<EngineDto | undefined, string>({
@@ -339,13 +336,12 @@ export const EngineApi = apiSlice.injectEndpoints({
 
                     return {
                         error: fetchError,
-                        // meta: {
-                        //     message: 'Ошибка получения данных',
-                        // },
                     }
                 }
             },
-            providesTags: ['Engine'],
+            providesTags: result => {
+                return [{ type: 'Engine' as const, id: result?.id ?? '' }]
+            },
         }),
 
         add: build.mutation<EngineDto, { name: string | null, file: File | null }>({
@@ -364,8 +360,6 @@ export const EngineApi = apiSlice.injectEndpoints({
                             message: `Данные двигателя ${name} успешно загружены`,
                         })
                     )
-
-                    console.log('data', data);
 
                     return {
                         data,

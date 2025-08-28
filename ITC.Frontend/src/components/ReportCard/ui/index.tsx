@@ -54,7 +54,7 @@ const adapter = (engine: EngineDto | undefined): Card[] => {
 
 export const ReportCard = () => {
   const { id = '' } = useParams()
-  const { data, isLoading } = EngineApi.useGetByIdQuery(id, { skip: !id })
+  const { data, isLoading } = EngineApi.useGetByIdQuery(id, { skip: !id, refetchOnMountOrArgChange: true })
 
   const cardData: Card[] = adapter(data)
 

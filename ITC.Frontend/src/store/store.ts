@@ -1,9 +1,10 @@
 import { configureStore } from "@reduxjs/toolkit";
-import { combineReducers } from "redux";
+import { combineReducers, createStore } from "redux";
 import { RegistrySlice } from "./registry";
 import { apiSlice } from "../api";
 import { AuthSlice } from "./auth";
 import { NotificationMiddleware, NotificationSlice } from "./notification";
+import { SignalRMiddleware, SignalRSlice } from "./signalR";
 
 
 export const appReducer = combineReducers({
@@ -11,6 +12,7 @@ export const appReducer = combineReducers({
   registry: RegistrySlice.reducer,
   api: apiSlice.reducer,
   notification: NotificationSlice.reducer,
+  signalR: SignalRSlice.reducer,
 });
 
 export function setupStore() {
@@ -19,7 +21,7 @@ export function setupStore() {
     middleware: getDefaultMiddleware =>
       getDefaultMiddleware({ serializableCheck: false })
         .prepend([
-          // SignalRMiddleware.middleware,
+          SignalRMiddleware.middleware,
           NotificationMiddleware.middleware,
         ])
         .concat([apiSlice.middleware]),
@@ -28,5 +30,5 @@ export function setupStore() {
 
 export const store = setupStore();
 
-export type RootState = ReturnType<typeof appReducer>;
+export type RootState = ReturnType<typeof store.getState>
 export type AppDispatch = typeof store.dispatch;

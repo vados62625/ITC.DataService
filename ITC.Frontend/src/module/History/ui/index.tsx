@@ -63,7 +63,7 @@ export const History = () => {
     const [selectedType, setSelectedType] = useState<DefectType>('CAGE')
 
     const { id = '' } = useParams()
-    const { data, isLoading } = EngineApi.useGetByIdQuery(id)
+    const { data, isLoading } = EngineApi.useGetByIdQuery(id, { skip: !id, refetchOnMountOrArgChange: true })
 
     const lineData = adapter(data)
 

@@ -10,7 +10,7 @@ import { Loader } from '@consta/uikit/Loader'
 
 export const MainParams = () => {
   const { id = '' } = useParams()
-  const { data, isLoading } = EngineApi.useGetByIdQuery(id, { skip: !id })
+  const { data, isLoading } = EngineApi.useGetByIdQuery(id, { skip: !id, refetchOnMountOrArgChange: true })
 
   if (isLoading) {
     return <Loader style={{ height: "100%", width: "100%" }} />

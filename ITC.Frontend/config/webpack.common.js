@@ -6,8 +6,38 @@ const paths = require("./paths");
 const { resolve } = require("path");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
+const devServer = {
+  historyApiFallback: true, // Apply HTML5 History API if paths are used
+  open: true,
+  compress: true,
+  allowedHosts: 'all',
+  proxy: [
+    // SignalR
+    {
+      context: ['/engineHub'],
+      changeOrigin: true,
+      target: 'http://89.108.73.166:5016/engineHub',
+      ws: true,
+    },
+  ],
+  headers: {
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Methods': '*',
+    'Access-Control-Allow-Headers': '*',
+  },
+  client: {
+    // Shows a full-screen overlay in the browser when there are compiler errors or warnings
+    overlay: {
+      errors: true,
+      warnings: true,
+    },
+  },
+  port: 3001,
+}
+
 module.exports = {
   entry: [paths.src + "/index.tsx"],
+  devServer,
   mode: "development",
   output: {
     path: paths.build,
@@ -28,7 +58,6 @@ module.exports = {
       filename: "index.html",
     }),
   ],
-
   module: {
     rules: [
       {

@@ -12,7 +12,7 @@ import { EngineApi } from '../../apiRTK'
 export const Details = () => {
   const [currentTabs, setCurrentTabs] = useState<TabsItemDefault>(TABS[0])
   const { id = '' } = useParams()
-  const { data, isLoading } = EngineApi.useGetByIdQuery(id, { skip: !id })
+  const { data, isLoading } = EngineApi.useGetByIdQuery(id, { skip: !id, refetchOnMountOrArgChange: true })
 
   const isMainParamsTab = currentTabs === TABS[0]
   const isAnalyticTab = currentTabs === TABS[1]

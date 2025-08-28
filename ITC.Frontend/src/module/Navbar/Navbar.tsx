@@ -22,8 +22,8 @@ export const Navbar: FC<NavbarProps> = () => {
   const navigate = useNavigate();
 
   const onLogout = () => {
+    localStorage.removeItem('token')
     dispatch(AuthSlice.actions.replaceCurrentUser(null))
-    navigate(RoutePaths.Auth);
   };
 
   const onHeaderLoginClick = () => {

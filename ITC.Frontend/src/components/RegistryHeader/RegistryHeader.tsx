@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { RegistrySlice } from "../../store";
 import { TableFilterName, TableFilterType } from "../../types";
 import { IconAdd } from "@consta/uikit/IconAdd";
+import { EngineApi } from "../../apiRTK";
 
 type ItemType = {
   name: string,
@@ -26,6 +27,8 @@ const ITEMS: ItemType[] = [
 export const RegistryHeader: FC<RegistryHeaderProps> = ({ onAddNewReport }) => {
   const dispatch = useDispatch()
   const mode = useSelector(RegistrySlice.selectors.mode)
+  const [_, { isLoading }] = EngineApi.useAddMutation()
+  
 
   const isAddButtonVisible = mode === 'FILE'
 
@@ -47,6 +50,7 @@ export const RegistryHeader: FC<RegistryHeaderProps> = ({ onAddNewReport }) => {
           size="s"
           iconLeft={IconAdd}
           onClick={onAddNewReport}
+          loading={isLoading}
         />
       }
 
