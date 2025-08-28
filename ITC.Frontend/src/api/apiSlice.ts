@@ -7,7 +7,5 @@ export const apiSlice = createApi({
     baseUrl: 'http://89.108.73.166:5016/',
   }),
   endpoints: () => ({}),
-  tagTypes: [
-    'Engine',
-  ]
+  tagTypes: ['Engine'],
 })

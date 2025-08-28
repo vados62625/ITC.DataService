@@ -22,8 +22,6 @@ export const SignalRSlice = createSlice({
     },
   },
   selectors: {
-    hubSelector: (state, url: string) => {
-      return state[url]
-    },
+    hubSelector: (state) => state
   },
 })

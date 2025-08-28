@@ -1,12 +1,11 @@
 import React, { useState } from "react";
 import { DefectName, DefectType } from "../../../types";
-import { Line } from "@ant-design/charts";
+import { Line } from "@ant-design/plots";
 import { Select } from "@consta/uikit/Select";
 import { useParams } from "react-router-dom";
 import { EngineApi } from "../../../apiRTK";
 import { Loader } from "@consta/uikit/Loader";
 import { EngineDto } from "../../../api";
-import { getRuDate } from "../../../utils";
 
 type LineData = {
     date: Date | undefined,
@@ -108,54 +107,9 @@ export const History = () => {
         xField: 'date',
         yField: 'probability',
         seriesField: 'type',
-        // scale: {
-        //     color: {
-        //         range: ['#2688FF', 'red'],
-        //     },
-        // },
-        // style: {
-        //     lineWidth: 2,
-        //     lineDash: (items:string) => {
-        //         const { type } = items[0];
-        //         return type === 'Bor' ? [2, 4] : [0, 0];
-        //     },
-        // },
-        // interaction: {
-        //     tooltip: {
-        //         render: (e, { title, items }) => {
-        //             const list = items.filter((item) => item.value);
-        //             return (
-        //                 <div key={title}>
-        //                     <h4>{title}</h4>
-        //                     {list.map((item) => {
-        //                         const { name, value, color } = item;
-        //                         return (
-        //                             <div>
-        //                                 <div style={{ margin: 0, display: 'flex', justifyContent: 'space-between' }}>
-        //                                     <div>
-        //                                         <span
-        //                                             style={{
-        //                                                 display: 'inline-block',
-        //                                                 width: 6,
-        //                                                 height: 6,
-        //                                                 borderRadius: '50%',
-        //                                                 backgroundColor: color,
-        //                                                 marginRight: 6,
-        //                                             }}
-        //                                         ></span>
-        //                                         <span>{name}</span>
-        //                                     </div>
-        //                                     <b>{value}</b>
-        //                                 </div>
-        //                             </div>
-        //                         );
-        //                     })}
-        //                 </div>
-        //             );
-        //         },
-        //     },
-        // },
-        // legend: false,
+        slider: {
+            x: { labelFormatter: (date: Date) => date.toLocaleDateString() },
+        },
     };
 
     return (

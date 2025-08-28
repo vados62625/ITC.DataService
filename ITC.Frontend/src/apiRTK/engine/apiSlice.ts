@@ -295,7 +295,13 @@ export const EngineApi = apiSlice.injectEndpoints({
                     }
                 }
             },
-            providesTags: ['Engine']
+            providesTags: (result) =>
+                result
+                    ? [
+                        ...result.map(({ id }) => ({ type: 'Engine' as const, id })),
+                        { type: 'Engine', id: 'LIST' },
+                    ]
+                    : [{ type: 'Engine', id: 'LIST' }],
         }),
 
         getById: build.query<EngineDto | undefined, string>({
@@ -339,9 +345,10 @@ export const EngineApi = apiSlice.injectEndpoints({
                     }
                 }
             },
-            providesTags: result => {
-                return [{ type: 'Engine' as const, id: result?.id ?? '' }]
-            },
+            providesTags: (result, error, id) => [
+                { type: 'Engine', id },
+                { type: 'Engine', id: 'LIST' }, // Также инвалидируем список
+            ],
         }),
 
         add: build.mutation<EngineDto, { name: string | null, file: File | null }>({
@@ -383,7 +390,7 @@ export const EngineApi = apiSlice.injectEndpoints({
                     }
                 }
             },
-            invalidatesTags: ['Engine'],
+            invalidatesTags: [{ type: 'Engine', id: 'LIST' }],
         }),
 
         delete: build.mutation<void, string>({
@@ -415,7 +422,10 @@ export const EngineApi = apiSlice.injectEndpoints({
                     }
                 }
             },
-            invalidatesTags: ['Engine'],
+            invalidatesTags: (result, error, id) => [
+                { type: 'Engine', id },
+                { type: 'Engine', id: 'LIST' },
+            ],
         }),
     }),
 })

@@ -25,6 +25,7 @@ export const onStartConnection = ({
     .withUrl(hubUrl, {
       transport: HttpTransportType.WebSockets,
       accessTokenFactory: () => localStorage.getItem("token") ?? '',
+      skipNegotiation: true,
     })
     .withAutomaticReconnect()
     .configureLogging(LogLevel.Information)
