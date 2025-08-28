@@ -105,6 +105,7 @@ public class GetQueryHandler : IRequestHandler<GetQuery, PageableCollection<Engi
                 },
             };
             dto.IsLastAnalyseHasDefect = dto.Defects.Any(c => c.History.LastOrDefault()?.Probability > 0);
+            dto.IsLastAnalyseHasCriticalDefect = dto.Defects.Any(c => c.History.LastOrDefault()?.Probability > 0.6);
             dto.LastAnalyseDate = dto.Defects.Max(c => c.History.LastOrDefault()?.Date) ?? DateTime.Now;
 
             var cageTimeToDie = GetTimeToProbabilityOne(cage);
