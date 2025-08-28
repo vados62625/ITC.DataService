@@ -97,8 +97,7 @@ app.UseCors(c => c.WithOrigins("http://89.108.73.166", "http://7-volt.ru")
     .AllowAnyOrigin()
     .AllowAnyHeader()
     .AllowAnyMethod()
-    .SetIsOriginAllowed((x) => true)
-    .AllowCredentials());
+    .SetIsOriginAllowed((x) => true));
 
 app.MapControllers();
 app.MapHub<EngineHub>("/engineHub");
