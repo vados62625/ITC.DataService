@@ -50,7 +50,7 @@ public class AddCommandWrapper : IRequest<EngineDto>
             {
                 throw new ValidationException("No file uploaded");
             }
-            
+
             var dbSet = _dbContext.Set<Domain.Models.Engine>();
             var query = dbSet.AsQueryable();
 
@@ -66,7 +66,21 @@ public class AddCommandWrapper : IRequest<EngineDto>
 
             await _signalRService.SendMessageToAllAsync(EngineHub.NewEngineNotificationMethodName, dto);
 
-            await _dataServiceClient.UploadCsv(request.File, dto.Id);
+            var uploadResult = await _dataServiceClient.UploadCsv(request.File, dto.Id);
+
+            if (!uploadResult)
+            {
+                entity.EngineStatus = EngineStatus.Failed;
+                dbSet.Update(entity);
+                await _dbContext.SaveChangesAsync(cancellationToken);
+                dto = await query
+                    .Where(c => c.Id == entity.Id)
+                    .ProjectTo<EngineDto>(_mapper.ConfigurationProvider)
+                    .FirstAsync(cancellationToken);
+                
+                await _signalRService.SendMessageToAllAsync(EngineHub.NewEngineNotificationMethodName, dto);
+            }
+
             return dto;
         }
     }
