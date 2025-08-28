@@ -43,27 +43,27 @@ public class GetQueryHandler : IRequestHandler<GetQuery, PageableCollection<Engi
             var dto = _mapper.Map<EngineDto>(result);
             var cage = result.Analyses.Where(a => a.CageDefect != 0)
                 .Select(x => new DefectHistoryDto { Probability = x.CageDefect, Date = x.DateTime })
-                .OrderBy(c  => c.Date)
+                .OrderBy(c => c.Date)
                 .ToList();
             var innerRing = result.Analyses.Where(a => a.InnerRingDefect != 0)
                 .Select(x => new DefectHistoryDto { Probability = x.InnerRingDefect, Date = x.DateTime })
-                .OrderBy(c  => c.Date)
+                .OrderBy(c => c.Date)
                 .ToList();
             var misalignment = result.Analyses.Where(a => a.Misalignment != 0)
                 .Select(x => new DefectHistoryDto { Probability = x.Misalignment, Date = x.DateTime })
-                .OrderBy(c  => c.Date)
+                .OrderBy(c => c.Date)
                 .ToList();
             var outerRingDefect = result.Analyses.Where(a => a.OuterRingDefect != 0)
-                .Select(x => new DefectHistoryDto { Probability = x.OuterRingDefect, Date = x.DateTime})
-                .OrderBy(c  => c.Date)
+                .Select(x => new DefectHistoryDto { Probability = x.OuterRingDefect, Date = x.DateTime })
+                .OrderBy(c => c.Date)
                 .ToList();
             var rollingElementsDefect = result.Analyses.Where(a => a.RollingElementsDefect != 0)
                 .Select(x => new DefectHistoryDto { Probability = x.RollingElementsDefect, Date = x.DateTime })
-                .OrderBy(c  => c.Date)
+                .OrderBy(c => c.Date)
                 .ToList();
             var unbalance = result.Analyses.Where(a => a.Unbalance != 0)
                 .Select(x => new DefectHistoryDto { Probability = x.Unbalance, Date = x.DateTime })
-                .OrderBy(c  => c.Date)
+                .OrderBy(c => c.Date)
                 .ToList();
             dto.Defects = new List<DefectDto>()
             {
@@ -106,10 +106,74 @@ public class GetQueryHandler : IRequestHandler<GetQuery, PageableCollection<Engi
             };
             dto.IsLastAnalyseHasDefect = dto.Defects.Any(c => c.History.LastOrDefault()?.Probability > 0);
             dto.LastAnalyseDate = dto.Defects.Max(c => c.History.LastOrDefault()?.Date) ?? DateTime.Now;
+
+            var cageTimeToDie = GetTimeToProbabilityOne(cage);
+            var innerRingTimeToDie = GetTimeToProbabilityOne(innerRing);
+            var misalignmentTimeToDie = GetTimeToProbabilityOne(misalignment);
+            var outerRingDefectTimeToDie = GetTimeToProbabilityOne(outerRingDefect);
+            var rollingElementsDefectTimeToDie = GetTimeToProbabilityOne(rollingElementsDefect);
+            var unbalanceTimeToDie = GetTimeToProbabilityOne(unbalance);
+
+            dto.RecommendedMaintenanceDate = new List<DateTime?>
+                (
+                    [
+                        cageTimeToDie,
+                        innerRingTimeToDie,
+                        misalignmentTimeToDie,
+                        outerRingDefectTimeToDie,
+                        rollingElementsDefectTimeToDie,
+                        unbalanceTimeToDie
+                    ]
+                ).Where(c => c != null)
+                .Min();
+
             return dto;
         }).ToList();
 
         return new PageableCollection<EngineDto>(res, res.Count);
+    }
+
+    protected DateTime? GetTimeToProbabilityOne(List<DefectHistoryDto> points, int lastPointsCount = 100)
+    {
+        if (points == null || points.Count < 3)
+            return null;
+    
+        var recentPoints = points.TakeLast(Math.Min(lastPointsCount, points.Count)).ToList();
+    
+        // Линеаризуем: преобразуем в ln(1/(1-p)) для экспоненциальной аппроксимации
+        double sumX = 0, sumY = 0, sumXY = 0, sumX2 = 0;
+        int n = recentPoints.Count;
+    
+        double baseDate = recentPoints[0].Date.ToOADate();
+    
+        foreach (var point in recentPoints)
+        {
+            double x = point.Date.ToOADate() - baseDate;
+            // Преобразование для экспоненциального роста к 1
+            double y = Math.Log(1.0 / (1.0 - point.Probability));
+        
+            sumX += x;
+            sumY += y;
+            sumXY += x * y;
+            sumX2 += x * x;
+        }
+    
+        // Линейная регрессия для преобразованных данных
+        double b = (n * sumXY - sumX * sumY) / (n * sumX2 - sumX * sumX);
+        double a = (sumY - b * sumX) / n;
+    
+        if (b <= 0)
+            return null;
+    
+        // Обратное преобразование: находим когда p = 1
+        // 1/(1-p) = exp(a + b*x) → 1-p = exp(-a - b*x) → p = 1 - exp(-a - b*x)
+        // Для p = 1: exp(-a - b*x) = 0, что невозможно
+        // Поэтому находим когда p достигнет 0.999 (практически 1)
+        double targetY = Math.Log(1.0 / (1.0 - 0.999));
+        double targetX = (targetY - a) / b;
+    
+        DateTime resultDate = recentPoints[0].Date.AddDays(targetX);
+        return resultDate;
     }
 }
 
