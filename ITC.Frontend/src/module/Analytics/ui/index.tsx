@@ -19,10 +19,6 @@ type StatusContainerProps = {
   children: ReactNode
 }
 
-const StatusContainer = ({ children }: StatusContainerProps) => (
-  <div className={styles.container}>{children}</div>
-)
-
 export const Analytics = () => {
   const { id = '' } = useParams()
   const { data } = EngineApi.useGetByIdQuery(id, { skip: !id, refetchOnMountOrArgChange: true })
@@ -33,34 +29,40 @@ export const Analytics = () => {
   switch (data?.engineStatus) {
     case 1:
       return (
-        <StatusContainer>
-          <div className={styles.containerColumn}>
-            <div className={styles.placeholder}>
-              <ProgressSpin />
-            </div>
+        <div className="container-row w-100 justify-center align-center p-t-4">
+          <div className={cn("container-row justify-center align-center", styles.containerColumn)}>
+            <Text size="l" weight='semibold' className='m-4'>
+              Выполняется анализ, пожалуйста подождите...
+            </Text>
+            <ProgressSpin size='2xl' />
           </div>
-        </StatusContainer>
+        </div>
       )
 
     case 2:
       return (
-        <StatusContainer>
-          <Responses500 className={styles.containerColumn} size="l" actions={<></>} />
-        </StatusContainer>
+        <div className="container-row w-100 justify-center align-center p-t-4">
+          <div className={cn("container-row justify-center align-center", styles.containerColumn)}>
+            <Responses500 className={styles.containerColumn} size="l" actions={<></>} />
+          </div>
+        </div>
       )
 
     case 3:
-      return data?.isLastAnalyseHasDefect ? (
-        <MainContent recommendedMaintenanceDate={recommendedMaintenanceDate} isInformerVisible={isInformerVisible} />
-      ) : (
-        <StatusContainer>
-          <ResponsesSuccess
-            className={styles.containerColumn}
-            size="l"
-            title="Дефекты не обнаружены!"
-            actions={<></>}
-          />
-        </StatusContainer>
+      return (
+        data?.isLastAnalyseHasDefect ? (
+          <MainContent recommendedMaintenanceDate={recommendedMaintenanceDate} isInformerVisible={isInformerVisible} />
+        ) : (
+          <div className="container-row w-100 justify-center align-center p-t-4">
+            <div className={cn("container-row justify-center align-center", styles.containerColumn)}>
+              <ResponsesSuccess
+                size="l"
+                title="Дефекты не обнаружены!"
+                actions={<></>}
+              />
+            </div>
+          </div>
+        )
       )
 
     default:
