@@ -52,7 +52,7 @@ export const loginAndFetchUser = createAsyncThunk(
       }
 
       const userData = await userResponse.json();
-      dispatch(AuthSlice.actions.replaceCurrentUser({ id: userData.id, userName: userData.name }))
+      dispatch(AuthSlice.actions.replaceCurrentUser({ id: userData.id, userName: userData.login }))
 
       return true
     } catch (error: any) {
